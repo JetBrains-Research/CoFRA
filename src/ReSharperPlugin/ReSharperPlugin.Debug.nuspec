@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Cofra.ReSharperPlugin</id>
+    <version>0.1</version>
+    <title>CoFRA Integration</title>
+    <authors>Artem Gorokhov, Ilya Nozhkin</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ReSharper plugin for interprocedural analysis</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>InterproceduralAnalysis</tags>
+    <dependencies>
+      <dependency id="Wave" version="[183.0,)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Core\Bin\Publish\*.*" target="DotFiles\CoFRA"/>
+    <file src="Bin\Debug\net472\Cofra.ReSharperPlugin.dll" target="DotFiles" />
+    <file src="Bin\Debug\net472\Cofra.AbstractIL.Common.dll" target="DotFiles" />
+    <file src="Bin\Debug\net472\Cofra.Contracts.dll" target="DotFiles" />
+  </files>
+</package>

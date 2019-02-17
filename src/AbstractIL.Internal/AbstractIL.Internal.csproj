@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Cofra.AbstractIL.Internal</RootNamespace>
+    <AssemblyName>Cofra.AbstractIL.Internal</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.5.4" />
+    <PackageReference Include="YC.QuickGraph" Version="3.7.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractIL.Common\AbstractIL.Common.csproj" />
+  </ItemGroup>
+
+</Project>

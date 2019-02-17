@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+    <RootNamespace>Cofra.Contracts</RootNamespace>
+    <Version>0.0.1</Version>
+    <PackageId>Cofra.Contracts</PackageId>
+    <Authors />
+    <Product />
+    <AssemblyName>Cofra.Contracts</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractIL.Common\AbstractIL.Common.csproj" />
+  </ItemGroup>
+
+</Project>

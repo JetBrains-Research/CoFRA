@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--<ItemGroup>
+    <ReferencePath Inlude="@(Reference->HasMetadata('HintPath')->'$(MSBuildProjectDirectory)\%(HintPath)')" />
+  </ItemGroup>-->
+  
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Version>0.1</Version>
+    <Authors>Artem Gorokhov, Ilya Nozhkin</Authors>
+    <Product>Cofra.ReSharperPlugin</Product>
+	<NuspecFile>ReSharperPlugin.$(Configuration).nuspec</NuspecFile>
+	<RootNamespace>Cofra.ReSharperPlugin</RootNamespace>
+	<AssemblyName>Cofra.ReSharperPlugin</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NET461;JET_MODE_ASSERT</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE;RELEASE;NETFRAMEWORK;NET461;JET_MODE_ASSERT</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractIL.Common\AbstractIL.Common.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="src\Options\" />
+    <Folder Include="src\Warnings\" />
+  </ItemGroup>
+  
+</Project>
