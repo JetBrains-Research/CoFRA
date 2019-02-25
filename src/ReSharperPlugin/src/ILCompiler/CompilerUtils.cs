@@ -9,7 +9,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace Cofra.ReSharperPlugin.ILCompiler
 {
-    
     public static class MethodIdExtension  
     {  
         public static string GetNameWithHash(this IDeclaredElement declaredElement)

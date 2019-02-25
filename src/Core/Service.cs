@@ -12,11 +12,15 @@ using System.Xml;
 using Cofra.AbstractIL.Common.ControlStructures;
 using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
+using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Internal;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Dumps;
 using Cofra.AbstractIL.Internal.Statements;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Markers;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 using Cofra.Contracts.Messages;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.Contracts.Messages.Responses;
@@ -129,6 +133,7 @@ namespace Cofra.Core
             }
         }
 
+        //TODO: REFACTOR IT !!!
         private List<ResolvedMethod<int>> PerformTypePropagation(out List<SecondaryEntity> collectedSecondaryEntities)
         {
             var program = myProgramBuilder.GetProgram();
@@ -156,6 +161,14 @@ namespace Cofra.Core
                 variable.ResetPropagatedTypes();
             }
 
+            foreach (var classField in allClassFields)
+            {
+                foreach (var marker in classField.Markers)
+                {
+                    classField.AddPrimary(marker);
+                }
+            }
+
             typePropagation.Analyze(methods);
 
             Logging.Log("Adding default types");
@@ -175,7 +188,6 @@ namespace Cofra.Core
                         Logging.Log(added.ToString());
                     }
                 }
-
             }
 
             foreach (var classField in allClassFields)
@@ -278,6 +290,14 @@ namespace Cofra.Core
             }
         }
 
+        private void TaintClassField(TaintClassFieldRequest request)
+        {
+            var program = myProgramBuilder.GetProgram();
+            var clazz = program.GetOrCreateClass(request.ClassName);
+            var field = program.GetOrCreateClassField(clazz.Id, request.FieldName);
+            field.Mark(TaintMarker.Instance);
+        }
+
         //TODO: Implement message processing via attribute-based processors declaration
         private Response ProcessMessage(Request request)
         {
@@ -292,12 +312,8 @@ namespace Cofra.Core
 
             switch (request)
             {
-                case UpdateMethodRequest updateMethodMessage:
-                    /*
-                    myProgramBuilder.Up(
-                        updateMethodMessage.Method.VariableId.Value, 
-                        updateMethodMessage.Method);
-                        */
+                case TaintClassFieldRequest taintClassFieldRequest:
+                    TaintClassField(taintClassFieldRequest);
                     return new SuccessResponse();
                 case UpdateFileRequest updateFileMessage:
                     UpdateFile(updateFileMessage);

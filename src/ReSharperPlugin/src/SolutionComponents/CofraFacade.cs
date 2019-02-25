@@ -59,7 +59,8 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
         
         private CofraClient myClient;
 
-        public CofraFacade(Lifetime lifetime,
+        public CofraFacade(
+            Lifetime lifetime,
             IThreading threading,
             ISolution solution,
             ISettingsStore settingsStore)
@@ -92,6 +93,8 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
 
             lifetime.AddBracket(StartSession, Terminate);
         }
+
+        public CofraClient Client => myClient;
 
         private void OnPsiChange(ITreeNode changedElement, PsiChangedElementType type)
         {

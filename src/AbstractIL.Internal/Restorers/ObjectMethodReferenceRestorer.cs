@@ -1,6 +1,8 @@
 ﻿using System;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
 namespace Cofra.AbstractIL.Internal.Restorers
 {

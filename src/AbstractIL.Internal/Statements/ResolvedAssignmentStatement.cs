@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
 namespace Cofra.AbstractIL.Internal.Statements
 {

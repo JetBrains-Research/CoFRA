@@ -4,6 +4,7 @@ using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Internal;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 
 namespace Cofra.Core.Analyzes
 {

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using Cofra.AbstractIL.Common.Types;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Primaries
 {
     [DataContract]
     public sealed class ResolvedClassId : PrimaryEntity 

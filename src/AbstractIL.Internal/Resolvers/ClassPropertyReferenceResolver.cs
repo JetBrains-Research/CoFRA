@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 
 namespace Cofra.AbstractIL.Internal.Resolvers
 {

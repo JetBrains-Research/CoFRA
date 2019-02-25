@@ -8,6 +8,8 @@ using Cofra.AbstractIL.Internal.Dumps;
 using Cofra.AbstractIL.Internal.Indexing;
 using Cofra.AbstractIL.Internal.Transducers;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
 namespace Cofra.AbstractIL.Internal.ControlStructures
 {

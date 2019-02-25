@@ -5,6 +5,8 @@ using Cofra.AbstractIL.Common;
 using Cofra.AbstractIL.Common.ControlStructures;
 using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Common.Types.Ids;
+using Cofra.Contracts.Messages.Requests;
+using Cofra.ReSharperPlugin.ILCompiler.CompilationResults;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.UI.Controls.TreeListView.Contracts;
@@ -34,6 +36,10 @@ namespace Cofra.ReSharperPlugin.ILCompiler
         public readonly LocalVariableIndexer LocalVariableIndexer;
 
         private readonly AnonFunctionNamer myAnonFunctionNamer = new AnonFunctionNamer();
+
+        private readonly List<Request> myCollectedInteractiveRequests;
+
+        public IEnumerable<Request> CollectedInteractiveRequests => myCollectedInteractiveRequests;
         
         public AbstractILCompilerParams(
             /*[NotNull] IResolveContext resolveContext, */ File file,
@@ -59,6 +65,8 @@ namespace Cofra.ReSharperPlugin.ILCompiler
             //BuildExpressions = buildExpressions;
             
             LocalVariableIndexer = new LocalVariableIndexer(this);
+
+            myCollectedInteractiveRequests = new List<Request>();
         }
 
         public Func<bool> InterruptCheck { get; }
@@ -198,6 +206,16 @@ namespace Cofra.ReSharperPlugin.ILCompiler
             if (!(names.Contains(localFunctionReference.MethodId.Value)))
             {
                 throw CreateException($"no such local function {localFunctionReference}. Actual names:[{ names.Join(";")}]");
+            }
+        }
+
+        public void CheckAndAddIfTainted(ClassFieldCompilationResult compiled)
+        {
+            var tainted = compiled.Attributes.Any(attribute => attribute.Name.ShortName == "Tainted");
+            if (tainted)
+            {
+                var request = new TaintClassFieldRequest(compiled.ContainingClass, compiled.FieldName);
+                myCollectedInteractiveRequests.Add(request);
             }
         }
     }

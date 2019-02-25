@@ -9,6 +9,8 @@ using Cofra.AbstractIL.Internal.Indexing;
 using Cofra.AbstractIL.Internal.Restorers;
 using Cofra.AbstractIL.Internal.Statements;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 using JetBrains.Annotations;
 using QuickGraph;
 using QuickGraph.Graphviz;
@@ -368,6 +370,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
             Trace.Assert(exists);
         }
 
+        //TODO: Class fields removal
         public void UpdateFile(string fileName, IEnumerable<ResolvedFullMethodId> fullMethodIds)
         {
             var possibleId = Files.Find(fileName);

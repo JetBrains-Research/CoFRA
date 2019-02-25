@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Cofra.AbstractIL.Common.Types;
+﻿using System.Runtime.Serialization;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Secondaries
 {
     [DataContract]
     public sealed class ResolvedLocalVariable : SecondaryEntity

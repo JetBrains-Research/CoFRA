@@ -85,6 +85,11 @@ namespace Cofra.ReSharperPlugin.Stages
             if (!compilerParams.InterruptCheck())
             {
                 component.SubmitFile(file);
+
+                foreach (var request in compilerParams.CollectedInteractiveRequests)
+                {
+                    component.Client.EnqueueRequest(request, _ => {});
+                }
             }
         }
     }

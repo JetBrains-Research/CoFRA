@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Primaries
 {
     [DataContract]
     [KnownType(typeof(ResolvedMethod<int>))]

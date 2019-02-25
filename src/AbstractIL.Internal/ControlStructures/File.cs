@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Cofra.AbstractIL.Internal.Dumps;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 
 namespace Cofra.AbstractIL.Internal.ControlStructures
 {

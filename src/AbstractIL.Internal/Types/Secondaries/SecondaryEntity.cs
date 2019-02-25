@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Cofra.AbstractIL.Common.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 using Cofra.AbstractIL.Internal.Utils;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Secondaries
 {
     [DataContract]
     [KnownType(typeof(ResolvedLocalVariable))]

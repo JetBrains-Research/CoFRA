@@ -160,6 +160,11 @@ namespace Cofra.ReSharperPlugin.ILCompiler
             {
                 if (myCurrentNodeCompiler == null) return;
                 result = myCurrentNodeCompiler.GetResult();
+
+                if (result is ClassFieldCompilationResult compiledClassField)
+                {
+                    @params.CheckAndAddIfTainted(compiledClassField);
+                }
             }
             catch (Exception e)
             {

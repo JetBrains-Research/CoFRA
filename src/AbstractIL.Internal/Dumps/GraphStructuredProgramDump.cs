@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Indexing;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 
 namespace Cofra.AbstractIL.Internal.Dumps
 {

@@ -5,6 +5,8 @@ using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
 namespace Cofra.AbstractIL.Internal.Statements
 {

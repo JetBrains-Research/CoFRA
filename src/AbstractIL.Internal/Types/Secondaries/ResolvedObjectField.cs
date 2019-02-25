@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using Cofra.AbstractIL.Internal.Types.Primaries;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Secondaries
 {
     [DataContract]
-    public sealed class ResolvedObjectMethodReference<TNode> : SecondaryEntity
+    public sealed class ResolvedObjectField : SecondaryEntity
     {
         [DataMember]
         public readonly SecondaryEntity OwningObject;
 
         [DataMember]
-        public readonly ResolvedMethodId MethodId;
+        public readonly int FieldId;
 
-        public Func<ResolvedClassId, ResolvedMethodId, ResolvedMethod<TNode>> FindClassMethod { get; set; } 
+        public Func<ResolvedClassId, int, ResolvedClassField> FindClassField { get; set; } 
 
-        public ResolvedObjectMethodReference(SecondaryEntity owningObject, ResolvedMethodId methodId)
+        public ResolvedObjectField(SecondaryEntity owningObject, int variableId)
         {
             OwningObject = owningObject;
-            MethodId = methodId;
+            FieldId = variableId;
         }
 
         public override void ResetPropagatedTypes()
@@ -45,13 +41,16 @@ namespace Cofra.AbstractIL.Internal.Types
         private void OnNewOwnerInstanceAdded(PrimaryEntity entity)
         {
             var classId = entity as ResolvedClassId;
-            //Trace.Assert(classId != null);
 
-            var method = FindClassMethod(classId, MethodId);
-            if (method != null)
+            //TODO: Trace.Assert(classId != null);
+            if (classId == null)
             {
-                AddPrimary(method);
+                return;
             }
+
+            var field = FindClassField(classId, FieldId);
+            field.PropagateForward(this);
+            this.PropagateForward(field);
         }
     }
 }

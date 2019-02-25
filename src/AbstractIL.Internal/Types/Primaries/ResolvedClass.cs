@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Primaries
 {
     [DataContract]
     public sealed class ResolvedClass<TNode> : IMethodHolder<TNode>

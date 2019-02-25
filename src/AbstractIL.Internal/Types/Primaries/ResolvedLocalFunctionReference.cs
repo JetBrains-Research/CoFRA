@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 
-namespace Cofra.AbstractIL.Internal.Types
+namespace Cofra.AbstractIL.Internal.Types.Primaries
 {
     [DataContract]
-    public sealed class ResolvedClassMethodReference<TNode> : PrimaryEntity, IInvokable<TNode>
+    public sealed class ResolvedLocalFunctionReference<TNode> : PrimaryEntity, IInvokable<TNode>
     {
-        [DataMember] 
-        public readonly ResolvedClassId OwnerId;
-
         [DataMember]
         public readonly ResolvedMethodId MethodId;
 
         public ResolvedMethod<TNode> Method { get; set; }
 
-        public ResolvedClassMethodReference(ResolvedClassId ownerId, ResolvedMethodId methodId)
+        public ResolvedLocalFunctionReference(ResolvedMethodId methodId)
         {
-            OwnerId = ownerId;
             MethodId = methodId;
         }
 

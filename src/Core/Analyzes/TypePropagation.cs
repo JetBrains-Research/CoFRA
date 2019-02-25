@@ -10,6 +10,8 @@ using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Statements;
 using Cofra.AbstractIL.Internal.Types;
+using Cofra.AbstractIL.Internal.Types.Primaries;
+using Cofra.AbstractIL.Internal.Types.Secondaries;
 using Cofra.Core.Analyzes.PDVM;
 using Cofra.Core.Util;
 using PDASimulator.DataStructures;
