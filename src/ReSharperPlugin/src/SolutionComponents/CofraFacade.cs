@@ -12,6 +12,7 @@ using Cofra.AbstractIL.Common.ControlStructures;
 using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
+using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.Contracts.Messages.Responses;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.ReSharperPlugin.RemoteService;
@@ -243,6 +244,21 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
             myLastFile = file;
             UpdateFile(file.Id.Value.ToString(), file);
             
+        }
+
+        public void PerformAnalysis(AnalysisType type)
+        {
+            var request = new PerformAnalysisRequest(type);
+            myClient.EnqueueRequest(request, _ => {});
+        }
+
+        public void CheckIfFieldsAreTainted(
+            IEnumerable<(ClassId, string)> requestedFields,
+            Action<IEnumerable<bool>> resultsProcessingAction)
+        {
+            var request = new CheckIfTaintedRequest(requestedFields);
+            myClient.EnqueueRequest(request, response => 
+                resultsProcessingAction(((TaintedFieldsResponse) response).TaintingFlags));
         }
 
         public File GetLastFile() => myLastFile;

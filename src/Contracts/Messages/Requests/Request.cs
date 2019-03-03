@@ -9,6 +9,7 @@ namespace Cofra.Contracts.Messages.Requests
     [KnownType(typeof(PerformAnalysisRequest))]
     [KnownType(typeof(AnalysisResultsRequest))]
     [KnownType(typeof(TaintClassFieldRequest))]
+    [KnownType(typeof(CheckIfTaintedRequest))]
     public abstract class Request
     {
     }

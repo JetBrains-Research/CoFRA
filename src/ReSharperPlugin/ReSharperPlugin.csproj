@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <Folder Include="src\Options\" />
-    <Folder Include="src\Warnings\" />
+    <Folder Include="src\Stages\Utils\" />
   </ItemGroup>
   
 </Project>

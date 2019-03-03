@@ -21,3 +21,5 @@ packages/
 
 move*DLLs.cmd
 ./*Plugin.zip
+
+install.cmd

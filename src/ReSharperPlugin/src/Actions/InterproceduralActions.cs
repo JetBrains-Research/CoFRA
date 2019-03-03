@@ -10,7 +10,8 @@ namespace Cofra.ReSharperPlugin.Actions
   public class InterproceduralActions : IAction, IInsertAfter<IntoInternalMenu, InternalWindowsMenu>
   {
     public InterproceduralActions(
-      DumpILAction rAction)
+      DumpILAction dumpIlAction,
+      PerformTaintAnalysisAction performTaintAnalysisAction)
     {
     }
   }

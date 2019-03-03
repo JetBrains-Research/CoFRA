@@ -1,3 +1,4 @@
+﻿using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
 using Cofra.ReSharperPlugin.SolutionComponents;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.UI.Actions;
@@ -7,8 +8,8 @@ using JetBrains.Util;
 
 namespace Cofra.ReSharperPlugin.Actions
 {
-    [Action("ActionDumpIL", "Dump IL", Id = 4235782)]
-    public class DumpILAction : BasicAction
+    [Action("ActionPerformTaintAnalysis", "Perform taint analysis", Id = 4235783)]
+    public sealed class PerformTaintAnalysisAction : BasicAction
     {
         protected override void RunAction(IDataContext context, DelegateExecute nextExecute)
         {
@@ -18,9 +19,10 @@ namespace Cofra.ReSharperPlugin.Actions
             if (cofra == null)
             {
                 MessageBox.ShowInfo("Cofra or solution is null");
+                return;
             }
             
-            System.IO.File.WriteAllText("C:\\work\\ILDump.txt", cofra.GetLastFile().ToString());
+            cofra.PerformAnalysis(AnalysisType.TaintChecking);
         }
     }
 }

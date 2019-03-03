@@ -21,7 +21,7 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
             var className = myFieldDeclaration.DeclaredElement?.GetContainingType()?.GetClrName().FullName;
             var classId = new ClassId(className);
 
-            var fieldName = myFieldDeclaration.DeclaredName;
+            var fieldName = myFieldDeclaration.DeclaredElement.GetNameWithHash();
 
             return new ClassFieldCompilationResult(
                 GetInstructionsConnectedSequentially(MyResults),

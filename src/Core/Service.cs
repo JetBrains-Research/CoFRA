@@ -60,8 +60,15 @@ namespace Cofra.Core
 
         public void Start()
         {
-            RestoreProgram();
-            Logging.Log("Restoring completed");
+            try
+            {
+                RestoreProgram();
+                Logging.Log("Restoring completed");
+            }
+            catch (Exception e)
+            {
+                Logging.Log(e.Message);
+            }
 
             //////////////////////////
 
@@ -116,19 +123,26 @@ namespace Cofra.Core
                     response = new FailureResponse();
                 }
 
-                using (var stringWriter = new StringWriter())
-                using (var xmlWriter = XmlWriter.Create(stringWriter))
+                try
                 {
-                    responsesSerializer.WriteObject(xmlWriter, response);
-                    xmlWriter.Flush();
-                    var serialized = stringWriter.ToString();
+                    using (var stringWriter = new StringWriter())
+                    using (var xmlWriter = XmlWriter.Create(stringWriter))
+                    {
+                        responsesSerializer.WriteObject(xmlWriter, response);
+                        xmlWriter.Flush();
+                        var serialized = stringWriter.ToString();
 
-                    Logging.LogXML(serialized);
+                        Logging.LogXML(serialized);
 
-                    //TODO: Make new line sending more accurate
-                    responsesSerializer.WriteObject(stream, response);
-                    stream.Write(new[] {(byte) '\n'}, 0, 1);
-                    stream.Flush();
+                        //TODO: Make new line sending more accurate
+                        responsesSerializer.WriteObject(stream, response);
+                        stream.Write(new[] {(byte) '\n'}, 0, 1);
+                        stream.Flush();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             }
         }
@@ -240,6 +254,7 @@ namespace Cofra.Core
                     var starts = PerformTypePropagation(out var secondaryEntities);
 
                     //TODO: locks
+                    /*
                     Task.Run(() =>
                     {
                         foreach (var secondaryEntity in secondaryEntities)
@@ -247,6 +262,7 @@ namespace Cofra.Core
                             secondaryEntity.DropAllCollectedPrimaries();
                         }
                     });
+                    */
                 }
                 catch (Exception e)
                 {
@@ -298,6 +314,23 @@ namespace Cofra.Core
             field.Mark(TaintMarker.Instance);
         }
 
+        private IEnumerable<bool> CheckIfClassFieldsAreTainted(CheckIfTaintedRequest request)
+        {
+            var program = myProgramBuilder.GetProgram();
+            bool CheckField(ClassId classId, string name)
+            {
+                var @class = program.GetOrCreateClass(classId);
+                var field = program.GetOrCreateClassField(@class.Id, name);
+
+                // TODO: Faster propagated markers check
+                return field.MarkedWith(TaintMarker.Instance) || 
+                       field.CollectedPrimaries.Any(entity => entity is TaintMarker);
+            }
+
+            return request.RequestedFields.Select(
+                field => CheckField(field.ClassId, field.FieldName));
+        }
+
         //TODO: Implement message processing via attribute-based processors declaration
         private Response ProcessMessage(Request request)
         {
@@ -331,6 +364,9 @@ namespace Cofra.Core
                     return new SuccessResponse();
                 case AnalysisResultsRequest analysisResultsRequest:
                     return GetAnalysisResults(analysisResultsRequest);
+                case CheckIfTaintedRequest checkIfTaintedRequest:
+                    var taintedFields = CheckIfClassFieldsAreTainted(checkIfTaintedRequest);
+                    return new TaintedFieldsResponse(taintedFields);
                 default:
                     return new FailureResponse();
             }
@@ -388,7 +424,6 @@ namespace Cofra.Core
             {
                 Logging.Log("Database not found");
             }
-            //Logging.Log("Database load is disabled");
         }
     }
 }
