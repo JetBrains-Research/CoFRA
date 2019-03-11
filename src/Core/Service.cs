@@ -6,14 +6,10 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Cofra.AbstractIL.Common.ControlStructures;
-using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
 using Cofra.AbstractIL.Common.Types.Ids;
-using Cofra.AbstractIL.Internal;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Dumps;
 using Cofra.AbstractIL.Internal.Statements;
@@ -21,12 +17,10 @@ using Cofra.AbstractIL.Internal.Types;
 using Cofra.AbstractIL.Internal.Types.Markers;
 using Cofra.AbstractIL.Internal.Types.Primaries;
 using Cofra.AbstractIL.Internal.Types.Secondaries;
-using Cofra.Contracts.Messages;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.Contracts.Messages.Responses;
 using Cofra.Core.Analyzes;
 using Cofra.Core.Util;
-using File = System.IO.File;
 
 namespace Cofra.Core
 {
@@ -316,6 +310,9 @@ namespace Cofra.Core
 
         private IEnumerable<bool> CheckIfClassFieldsAreTainted(CheckIfTaintedRequest request)
         {
+            //TODO: Optional
+            RunAnalysis(new PerformAnalysisRequest(AnalysisType.TaintChecking)).Wait();
+
             var program = myProgramBuilder.GetProgram();
             bool CheckField(ClassId classId, string name)
             {
@@ -367,6 +364,11 @@ namespace Cofra.Core
                 case CheckIfTaintedRequest checkIfTaintedRequest:
                     var taintedFields = CheckIfClassFieldsAreTainted(checkIfTaintedRequest);
                     return new TaintedFieldsResponse(taintedFields);
+                case DropCachesRequest _:
+                    myProgramBuilder = new GraphStructuredProgramBuilder();
+                    myQueuedCommits.Clear();
+                    return new SuccessResponse();
+                    break;
                 default:
                     return new FailureResponse();
             }

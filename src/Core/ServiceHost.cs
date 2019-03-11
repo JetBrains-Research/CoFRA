@@ -77,9 +77,6 @@ namespace Cofra.Core
             [Option('p', "port", Default = 8888)]
             public int Port { get; set; }
 
-            [Option('a', "analysis")]
-            public string Analysis { get; set; }
-
             [Option('b', "database")] 
             public string Database {get; set; }
         }

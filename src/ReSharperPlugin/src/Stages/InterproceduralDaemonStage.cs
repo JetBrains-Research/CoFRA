@@ -24,7 +24,7 @@ using JetBrains.Util;
 namespace Cofra.ReSharperPlugin.Stages
 {
     [DaemonStage(StagesBefore = new[] {typeof(LanguageSpecificDaemonStage)})]
-    internal class InterproceduralDaemonStage : CSharpDaemonStageBase
+    public class InterproceduralDaemonStage : CSharpDaemonStageBase
     {
         protected override IDaemonStageProcess CreateProcess(IDaemonProcess process,
             IContextBoundSettingsStore settings,
@@ -34,7 +34,7 @@ namespace Cofra.ReSharperPlugin.Stages
         }
     }
 
-    internal class InterproceduralDaemonStageProcess : CSharpDaemonStageProcessBase
+    public class InterproceduralDaemonStageProcess : CSharpDaemonStageProcessBase
     {
         private readonly bool isVisibleFile;
 

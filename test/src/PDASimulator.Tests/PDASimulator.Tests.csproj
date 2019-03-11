@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PDASimulator\PDASimulator.csproj" />
+    <ProjectReference Include="..\..\..\src\PDASimulator\PDASimulator.csproj" />
   </ItemGroup>
 
 </Project>

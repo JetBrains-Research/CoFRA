@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.3" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Core\Core.csproj" />
+    <ProjectReference Include="..\..\..\src\ReSharperPlugin\ReSharperPlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Update="JetBrains.Platform.Tests.Framework.Shell">
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

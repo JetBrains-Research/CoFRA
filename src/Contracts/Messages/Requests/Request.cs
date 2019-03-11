@@ -10,6 +10,7 @@ namespace Cofra.Contracts.Messages.Requests
     [KnownType(typeof(AnalysisResultsRequest))]
     [KnownType(typeof(TaintClassFieldRequest))]
     [KnownType(typeof(CheckIfTaintedRequest))]
+    [KnownType(typeof(DropCachesRequest))]
     public abstract class Request
     {
     }

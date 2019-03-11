@@ -28,11 +28,11 @@ namespace Cofra.AbstractIL.Internal.Transducers
             var processedParameters = passedParameters.ToDictionary(
                 pair =>
                 {
-                    if (pair.Key is PrimaryEntity primary)
+                    if (!(pair.Key is ResolvedLocalVariable))
                     {
                         var newTarget = nodeCreator();
                         var newVariable = variableCreator();
-                        var statement = new ResolvedAssignmentStatement(null, primary, newVariable);
+                        var statement = new ResolvedAssignmentStatement(null, pair.Key, newVariable);
                         var edge = new OperationEdge<TNode>(currentSource, statement, newTarget);
 
                         targetProgram.AddEdge(edge);

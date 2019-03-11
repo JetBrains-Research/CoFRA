@@ -1,0 +1,24 @@
+namespace TaintTrackingTests
+{
+    class TaintedAttribute : Attribute
+    {
+    }
+
+    class Program
+    {
+        [Tainted] 
+        public int |A|(0);
+
+        public int |B|(1);  
+
+        static void Main(string[] args)
+        {
+            Program a = new Program(); 
+            var b = a.A;
+            a.B = b;
+        }
+    }
+}
+---------------------------------------------------------
+(0): ReSharper Warning: (T) 'Tainted' (E) '???'
+(1): ReSharper Warning: (T) 'Tainted' (E) '???'

@@ -77,7 +77,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
 
             transducer.Transform(body, myProgram, method, mapper);
 
-            //myProgram.DumpToDot("C:/work/graph.dot");
+            myProgram.DumpToDot("C:/work/graph.dot");
         }
 
         public void UpdateMethod(IMethodHolder<Node> owner, Common.Types.Method source)

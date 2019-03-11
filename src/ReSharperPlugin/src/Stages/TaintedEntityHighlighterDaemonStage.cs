@@ -22,7 +22,7 @@ using JetBrains.Util;
 namespace Cofra.ReSharperPlugin.Stages
 {
     [DaemonStage(LongRunningStage = true, StagesBefore = new[] {typeof(InterproceduralDaemonStage)})]
-    internal sealed class TaintedEntityHighlighterDaemonStage : CSharpDaemonStageBase 
+    public sealed class TaintedEntityHighlighterDaemonStage : CSharpDaemonStageBase 
     {
         protected override IDaemonStageProcess CreateProcess(
             IDaemonProcess process, 
@@ -40,7 +40,7 @@ namespace Cofra.ReSharperPlugin.Stages
         }
     }
 
-    internal sealed class TaintedEntityHighlighterDaemonStageProcess : CSharpDaemonStageProcessBase
+    public sealed class TaintedEntityHighlighterDaemonStageProcess : CSharpDaemonStageProcessBase
     {
         [NotNull] private readonly CofraFacade myCofraFacade;
         [NotNull] private readonly PersistentIndexManager myPersistentIndexManager;

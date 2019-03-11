@@ -45,79 +45,36 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
     public class CofraFacade
     {
         private readonly Lifetime myLifetime;
-        private readonly IContextBoundSettingsStoreLive mySettingsStore;
         private readonly IThreading myThreading;
         private readonly ISolution mySolution;
-        private readonly IPsiCaches myPsiCaches;
-        private readonly ChangeManager myChangeManager;
         private readonly DaemonImpl myDaemonImpl;
-        private readonly IPersistentIndexManager myPersistentIndexManager;
 
-        private volatile bool mySweaEnabled;
         public bool ResultsAvailable { get; private set; }
 
         private File myLastFile;
         
         private CofraClient myClient;
 
+        private readonly Queue<Action<CofraClient>> mySuspendedAcitons;
+
         public CofraFacade(
             Lifetime lifetime,
             IThreading threading,
-            ISolution solution,
-            ISettingsStore settingsStore)
+            ISolution solution)
         {
-            mySettingsStore = settingsStore.BindToContextLive(lifetime, ContextRange.Smart(solution.ToDataContext()));
             myLifetime = lifetime;
             myThreading = threading;
             mySolution = solution;
 
-            myChangeManager = mySolution.GetComponent<ChangeManager>();
             myDaemonImpl = mySolution.GetComponent<DaemonImpl>();
-
-            myPersistentIndexManager = mySolution.GetComponent<PersistentIndexManager>();
-
-            try
-            {
-                System.IO.File.WriteAllText("C:\\work\\exceptions.txt","");
-            }
-            catch (Exception e)
-            {
-            }
+            mySuspendedAcitons = new Queue<Action<CofraClient>>();
 
             ResultsAvailable = false;
-
-            var sweaConfiguration = mySolution.GetComponent<SolutionAnalysisConfiguration>();
-            mySweaEnabled = sweaConfiguration.Enabled.Value;
-            sweaConfiguration.Enabled.Change.Advise(lifetime, args => mySweaEnabled = args?.New ?? false);
-
-            myChangeManager.Changed2.Advise(lifetime, OnChanged);
 
             lifetime.AddBracket(StartSession, Terminate);
         }
 
         public CofraClient Client => myClient;
-
-        private void OnPsiChange(ITreeNode changedElement, PsiChangedElementType type)
-        {
-        }
-
-        private void OnChanged(ChangeEventArgs args)
-        {
-            if (!mySweaEnabled)
-            {
-                var delta = args.ChangeMap.GetChanges<PsiModuleChange>();
-                var affected = delta
-                    .SelectMany(change => change.FileChanges)
-                    .Where(change => change.Type == PsiModuleChange.ChangeType.Invalidated || 
-                                     change.Type == PsiModuleChange.ChangeType.Modified)
-                    .Select(change => change.Item);
-
-                foreach (var file in affected)
-                {
-                    myDaemonImpl.ForceReHighlight(file.Document);
-                }
-            }
-        }
 
         public void UpdateMethod(Method method)
         {
@@ -145,7 +102,6 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
         private FileSystemPath GetLibrariesPath()
         {
             return Assembly.GetExecutingAssembly().GetPath().Directory;
-            //return FileSystemPath.Parse(mySettingsStore.GetValue((InterproceduralAnalysisSettings settings) => settings.PathToLockChecker));
         }
 
         static int FreeTcpPort()
@@ -164,12 +120,26 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
         
         private void SessionBody()
         {
+            //TODO: move to the class fields or settings
+            const string executableFileName = "Cofra.Core.exe";
+            const string serviceDirectoryName = "CoFRA";
+            const string cacheDirectoryName = "InterproceduralAnalysis";
+            const string databaseName = "database.zip";
+
             var librariesPath = GetLibrariesPath();
-            var servicePath = librariesPath.Combine("CoFRA").Combine("Cofra.Core.exe");
+            var servicePath = librariesPath.Combine(serviceDirectoryName).Combine(executableFileName);
+            var testServicePath = librariesPath.Combine(executableFileName);
             var servicePort = GetServicePort();
 
             var caches = mySolution.GetComponent<SolutionCaches>();
-            var databasePath = caches.GetCacheFolder().Combine("InterproceduralAnalysis").Combine("database.zip");
+            var databasePath = caches.GetCacheFolder()
+                .Combine(cacheDirectoryName)
+                .Combine(databaseName);
+
+            if (!(servicePath.IsAbsolute && servicePath.ExistsFile))
+            {
+                servicePath = testServicePath;
+            }
 
             if (servicePath.IsAbsolute && servicePath.ExistsFile)
             {
@@ -178,7 +148,6 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
                     {
                         FileName = servicePath.FullPath,
                         Arguments = $"--as-service --port {servicePort} " +
-                                    $"--analysis \"{librariesPath.FullPath}\" " +
                                     $"--database \"{databasePath}\"",
                         WorkingDirectory = librariesPath.FullPath,
                         UseShellExecute = false,
@@ -206,6 +175,11 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
                     }
                 }
 
+                foreach (var action in mySuspendedAcitons)
+                {
+                    action(myClient);
+                }
+
                 myClient.Start();
             }
         }
@@ -215,35 +189,28 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
             return new FileId(sourceFile.GetPersistentID());
         }
 
-//        public void LogFile(File file, string fileName)
-//        {
-//            var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-//            System.IO.File.AppendAllText(fileName, $"ASSEMBLY {assemblyFolder}\n\n\n");
-//            System.IO.File.AppendAllText(fileName, $"File {file.Id} methods:\n");
-//            foreach (var method in file.Methods)
-//            {
-//                var baseMethod = method.BaseMethods.IsEmpty() ? ": " + method.BaseMethods.Select(x => x.ToString()).Join(", "): "";
-//                System.IO.File.AppendAllText(fileName, $"  {method.Id} {baseMethod}\n");
-//                System.IO.File.AppendAllText(fileName, $"  Initials:\n    {method.InitialInstructions} \n  Instructions:\n");
-//                foreach (var instruction in method.Instructions)
-//                    System.IO.File.AppendAllText(fileName, $"    {instruction.Id} | {instruction.Statement.Type} | {instruction.Continuation} \n");
-//                System.IO.File.AppendAllText(fileName, "\n");
-//            }
-//        }
-
         public void SubmitFile(File file)
         {
-            //LogFile(file, @"C:\work\logs\log.txt");
-            
-//            foreach (var method in file.Classes)
-//            {
-//                UpdateMethod(method);
-//            }
-
-            //var methodNames = file.Methods.Select(method => method.Id.Value);
             myLastFile = file;
             UpdateFile(file.Id.Value.ToString(), file);
-            
+        }
+
+        public void DropCaches()
+        {
+            Action<CofraClient> action = client =>
+                {
+                    var request = new DropCachesRequest();
+                    client.EnqueueRequest(request, _ => { });
+                };
+
+            if (myClient != null)
+            {
+                action(myClient);
+            }
+            else
+            {
+                mySuspendedAcitons.Enqueue(action);
+            }
         }
 
         public void PerformAnalysis(AnalysisType type)
