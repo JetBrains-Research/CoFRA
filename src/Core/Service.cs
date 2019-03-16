@@ -34,7 +34,7 @@ namespace Cofra.Core
 
         private readonly AnalyzesResultsCache myResultsCache;
         private volatile bool myProgramLock;
-        private volatile bool myProgramHasChanged;
+        //private volatile bool myProgramHasChanged;
 
         private readonly Queue<Action> myQueuedCommits;
 
@@ -46,7 +46,7 @@ namespace Cofra.Core
             myDatabasePath = databasePath;
 
             myResultsCache = new AnalyzesResultsCache();
-            myProgramHasChanged = true;
+            //myProgramHasChanged = true;
             myProgramLock = false;
 
             myQueuedCommits = new Queue<Action>();
@@ -368,7 +368,6 @@ namespace Cofra.Core
                     myProgramBuilder = new GraphStructuredProgramBuilder();
                     myQueuedCommits.Clear();
                     return new SuccessResponse();
-                    break;
                 default:
                     return new FailureResponse();
             }
@@ -424,7 +423,7 @@ namespace Cofra.Core
             }
             catch (FileNotFoundException exception)
             {
-                Logging.Log("Database not found");
+                Logging.Log($"Database not found: \r\n {exception.Message}");
             }
         }
     }

@@ -45,25 +45,6 @@ namespace PDASimulator.Tests.BlackBox
         }
 
         [Test]
-        public void SkippedBottleneckUsingSppf()
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareSkippedBottleneckTest(dpda, graph);
-            var paths = simulate(start, 2).ToArray();
-
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-            }
-
-            var expected = ImmutableHashSet<string>.Empty.Add("c e s s f d").Add("a e s s f b");
-            Assert.True(expected.SetEquals(paths));
-        }
-
-        [Test]
         public void SkippedBottleneckUsingPda()
         {
             TestHelper.InitializePdaProducingSimulation(
@@ -117,30 +98,6 @@ namespace PDASimulator.Tests.BlackBox
         }
 
         [Test]
-        public void OnSkipBranchMergingUsingSppf()
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareOnSkipBranchMergingTest(dpda, graph);
-            var paths = simulate(start, 2).ToArray();
-
-            var expected =
-                ImmutableList<string>.Empty
-                    .Add("a b").Add("a s b").Add("a s s b").Add("a s s s b")
-                    .Add("s").Add("s a s s s b").Add("s a s s s b")
-                    .Sort();
-
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-            }
-
-            Assert.True(expected.SequenceEqual(paths));
-        }
-
-        [Test]
         public void OnSkipBranchMergingUsingPda()
         {
             TestHelper.InitializePdaProducingSimulation(
@@ -186,22 +143,6 @@ namespace PDASimulator.Tests.BlackBox
             Edge(4, 3, "s");
 
             return 0;
-        }
-
-        [Test]
-        public void SkippedCyclesUsingSppf()
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareSkippedCyclesTest(dpda, graph);
-            var paths = simulate(0, 1);
-
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-            }
         }
 
         [Test]

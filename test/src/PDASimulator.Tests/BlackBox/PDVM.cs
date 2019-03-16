@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using NUnit.Framework;
 using PDASimulator.DataStructures.GSS;
 using PDASimulator.Payloads;
 using PDASimulator.Tests.Utils;
@@ -22,11 +25,15 @@ namespace PDASimulator.Tests.BlackBox
             Edge(1, 2, "s");
             Edge(2, 3, "e");
             Edge(3, 4, "e");
-            Edge(4, 2, "e");
+            Edge(4, 1, "e");
             Edge(3, 5, "b");
             Edge(5, 6, "k");
 
             var paths = simulate(0, 2);
+
+            var expected = new[] {"a s b k", "a s s b k", "a s s s b k"};
+
+            Assert.True(paths.ToImmutableHashSet().SetEquals(expected));
         }
 
         private class MyPDVM : TestPDVM
@@ -38,7 +45,6 @@ namespace PDASimulator.Tests.BlackBox
                     Finish();
                 }
             }
-
 
             public override void Step(
                 int state, 

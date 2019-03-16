@@ -144,30 +144,6 @@ namespace PDASimulator.Tests.BlackBox
         [TestCase(3, 3)]
         [TestCase(3, 4)]
         [TestCase(3, 5)]
-        public static void TwoCyclesNestedBracketsUsingSppf(int leftLength, int rightLength)
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareDataForTwoCyclesNestedBracketsTest(leftLength, rightLength, dpda, graph);
-            var paths = simulate(start, 2);
-
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-
-                var brackets = Brackets(new[] {("a", "b")});
-                Assert.True(CheckBracketsCorrectness(path, brackets));
-                Assert.True(CheckBracketSequencesLength(path, leftLength, rightLength));
-            }
-        }
-
-        [TestCase(5, 3)]
-        [TestCase(4, 3)]
-        [TestCase(3, 3)]
-        [TestCase(3, 4)]
-        [TestCase(3, 5)]
         public static void TwoCyclesNestedBracketsUsingPda(int leftLength, int rightLength)
         {
             TestHelper.InitializePdaProducingSimulation(
@@ -202,31 +178,6 @@ namespace PDASimulator.Tests.BlackBox
             var startVertex = ConstructTwoCycles(graph, leftLength, rightLength);
 
             return startVertex;
-        }
-
-        [TestCase(5, 3)]
-        [TestCase(4, 3)]
-        [TestCase(3, 3)]
-        [TestCase(3, 4)]
-        [TestCase(3, 5)]
-        [TestCase(1, 1)]
-        public static void TwoCyclesAllCorrectBracketsUsingSppf(int leftLength, int rightLength)
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareDataForTwoCyclesAllCorrectBracketsTest(leftLength, rightLength, dpda, graph);
-            var paths = simulate(start, 0);
-
-            foreach (var path in paths)
-            {
-                Console.WriteLine(path);
-
-                var brackets = Brackets(new[] {("a", "b")});
-                Assert.True(CheckBracketsCorrectness(path, brackets));
-                Assert.True(CheckBracketSequencesLength(path, leftLength, rightLength));
-            }
         }
 
         [TestCase(5, 3)]
@@ -280,24 +231,6 @@ namespace PDASimulator.Tests.BlackBox
             graph.AddVerticesAndEdge(new TaggedEdge<int, string>(4, 6, "d"));
 
             return 0;
-        }
-
-        [Test]
-        public static void DifferentBracketsAroundBottleneckUsingSppf()
-        {
-            TestHelper.InitializeSppfProducingSimulation(
-                _ => 1, () => -1,
-                out var dpda, out var graph, out var simulate);
-
-            var start = PrepareDataForDifferentBracketsAroundBottleneckTest(dpda, graph);
-            var paths = simulate(start, 0);
-
-            foreach (var path in paths)
-            {
-                var brackets = Brackets(new[] {("a", "b"), ("c", "d"), ("e", "f")});
-                CheckBracketsCorrectness(path, brackets);
-                Console.WriteLine(path);
-            }
         }
 
         [Test]
