@@ -10,8 +10,9 @@ using JetBrains.ReSharper.FeaturesTestFramework.Daemon;
 using JetBrains.ReSharper.Psi;
 using NUnit.Framework;
 
-namespace ReSharperPlugin.Tests.TaintAnalysis
+namespace ReSharperPlugin.Tests
 {
+    [TestFixture]
     public class Tests : CSharpHighlightingTestBase 
     {
         protected override string RelativeTestDataPath => "../data/TaintAnalysis";
@@ -46,9 +47,16 @@ namespace ReSharperPlugin.Tests.TaintAnalysis
         [TestCase("PassThroughClassField")]
         [TestCase("PassAsMethodArgument")]
         [TestCase("ReturnAsMethodResult")]
+        [Test]
         public void Execute(string source)
         {
             DoOneTest(source);
+        }
+
+        [Test]
+        public static void Test()
+        {
+
         }
     }
 }

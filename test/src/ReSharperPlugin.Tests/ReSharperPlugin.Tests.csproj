@@ -5,6 +5,7 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <AssemblyName>Cofra.ReSharperPlugin.Tests</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,6 +15,9 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.3" />
     <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2018.3.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="NUnit" Version="2.6.4" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
   </ItemGroup>
 
   <ItemGroup>
