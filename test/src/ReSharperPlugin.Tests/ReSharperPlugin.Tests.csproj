@@ -38,6 +38,6 @@
   </Target>
   
   <Target Name="RunTestsAppVeyor">
-    <Exec Command="nunit3-console.exe &quot;$(OutputPath)\ReSharperPlugin.Tests.dll&quot; --result=ReSharperPlugin.Tests.xml;format=AppVeyor" />
+    <Exec Command="nunit-console.exe &quot;$(OutputPath)\ReSharperPlugin.Tests.dll&quot;" />
   </Target>
 </Project>
