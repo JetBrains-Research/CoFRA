@@ -1,0 +1,30 @@
+version: 0.1.{build}-{branch}
+
+image: Visual Studio 2017
+
+clone_folder: c:\projects\CoFRA
+
+clone_depth: 1
+
+cache:
+  - packages -> **\packages.config
+  - '%LocalAppData%\NuGet\v3-cache'
+
+platform: Any CPU
+
+configuration: Release
+
+build:
+  parallel: true   
+  project: CoFRA.sln
+
+  verbosity: normal
+
+after_build:
+  .\build_plugin.cmd
+
+test_script:
+  .\run_tests_appveyor.cmd
+
+artifacts:
+  - path: 'Cofra.ReSharperPlugin.0.1.0.nupkg'

@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
-    <AssemblyName>Cofra.PDASimulator.Tests</AssemblyName>
+    <AssemblyName>PDASimulator.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

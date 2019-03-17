@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace ReSharperPlugin.Tests
 {
     [TestFixture]
-    public class Tests : CSharpHighlightingTestBase 
+    public sealed class TaintTrackingTests : CSharpHighlightingTestBase 
     {
         protected override string RelativeTestDataPath => "../data/TaintAnalysis";
 
@@ -47,16 +47,9 @@ namespace ReSharperPlugin.Tests
         [TestCase("PassThroughClassField")]
         [TestCase("PassAsMethodArgument")]
         [TestCase("ReturnAsMethodResult")]
-        [Test]
         public void Execute(string source)
         {
             DoOneTest(source);
-        }
-
-        [Test]
-        public static void Test()
-        {
-
         }
     }
 }

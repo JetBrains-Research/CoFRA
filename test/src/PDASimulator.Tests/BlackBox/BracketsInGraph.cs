@@ -151,7 +151,7 @@ namespace PDASimulator.Tests.BlackBox
                 out var dpda, out var graph, out var simulate);
 
             var start = PrepareDataForTwoCyclesNestedBracketsTest(leftLength, rightLength, dpda, graph);
-            var paths = simulate(start, 2);
+            var paths = simulate(start, 2).Distinct();
 
             foreach (var path in paths)
             {
@@ -193,7 +193,7 @@ namespace PDASimulator.Tests.BlackBox
                 out var dpda, out var graph, out var simulate);
 
             var start = PrepareDataForTwoCyclesAllCorrectBracketsTest(leftLength, rightLength, dpda, graph);
-            var paths = simulate(start, 2);
+            var paths = simulate(start, 2).Distinct();
 
             foreach (var path in paths)
             {
@@ -241,7 +241,7 @@ namespace PDASimulator.Tests.BlackBox
                 out var dpda, out var graph, out var simulate);
 
             var start = PrepareDataForDifferentBracketsAroundBottleneckTest(dpda, graph);
-            var paths = simulate(start, 0);
+            var paths = simulate(start, 0).Distinct();
 
             foreach (var path in paths)
             {
