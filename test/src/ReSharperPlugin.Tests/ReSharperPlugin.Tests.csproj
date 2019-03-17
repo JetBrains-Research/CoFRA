@@ -32,5 +32,12 @@
       <Private>true</Private>
     </Reference>
   </ItemGroup>
-
+  
+  <Target Name="RunTests">
+    <Exec Command="nunit3-console.exe $(OutputPath)\ReSharperPlugin.Tests.dll" />
+  </Target>
+  
+  <Target Name="RunTestsAppVeyor">
+    <Exec Command="nunit3-console.exe $(OutputPath)\ReSharperPlugin.Tests.dll --result=ReSharperPlugin.Tests.xml;format=AppVeyor" />
+  </Target>
 </Project>

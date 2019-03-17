@@ -23,4 +23,15 @@
     <ProjectReference Include="..\..\..\src\PDASimulator\PDASimulator.csproj" />
   </ItemGroup>
 
+  <Target Name="CopyAssemblies" AfterTargets="CopyFilesToOutputDirectory">
+    <Copy SourceFiles="@(PluginAssemblies)" DestinationFolder="bin\Plugin" />
+  </Target>
+  
+  <Target Name="RunTests">
+    <Exec Command="nunit3-console.exe $(OutputPath)\PDASimulator.Tests.dll" />
+  </Target>
+  
+  <Target Name="RunTestsAppVeyor">
+    <Exec Command="nunit3-console.exe $(OutputPath)\PDASimulator.Tests.dll --result=PDASimulator.Tests.xml;format=AppVeyor" />
+  </Target>
 </Project>

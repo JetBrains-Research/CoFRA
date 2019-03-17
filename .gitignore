@@ -18,8 +18,6 @@ bld/
 packages/
 
 *.nupkg
-
-move*DLLs.cmd
-./*Plugin.zip
+*TestResult.xml
 
 install.cmd

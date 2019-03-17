@@ -13,6 +13,16 @@
 	<RootNamespace>Cofra.ReSharperPlugin</RootNamespace>
 	<AssemblyName>Cofra.ReSharperPlugin</AssemblyName>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PluginAssemblies Include="$(OutputPath)\Cofra.ReSharperPlugin.dll" />
+	<PluginAssemblies Include="$(OutputPath)\Cofra.AbstractIL.Common.dll" />
+	<PluginAssemblies Include="$(OutputPath)\Cofra.Contracts.dll" />
+  </ItemGroup>
+  
+  <Target Name="CopyAssemblies" AfterTargets="CopyFilesToOutputDirectory">
+    <Copy SourceFiles="@(PluginAssemblies)" DestinationFolder="bin\Plugin" />
+  </Target>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NET461;JET_MODE_ASSERT</DefineConstants>

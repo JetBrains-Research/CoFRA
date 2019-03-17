@@ -15,9 +15,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Core\Bin\Publish\*.*" target="DotFiles\CoFRA"/>
-    <file src="Bin\Debug\net472\Cofra.ReSharperPlugin.dll" target="DotFiles" />
-    <file src="Bin\Debug\net472\Cofra.AbstractIL.Common.dll" target="DotFiles" />
-    <file src="Bin\Debug\net472\Cofra.Contracts.dll" target="DotFiles" />
+    <file src="..\Core\bin\publish\*.*" target="DotFiles\CoFRA"/>
+    <file src="bin\Plugin\Cofra.ReSharperPlugin.dll" target="DotFiles" />
+    <file src="bin\Plugin\Cofra.AbstractIL.Common.dll" target="DotFiles" />
+    <file src="bin\Plugin\Cofra.Contracts.dll" target="DotFiles" />
   </files>
 </package>
