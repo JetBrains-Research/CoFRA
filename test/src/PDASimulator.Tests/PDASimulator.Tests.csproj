@@ -28,10 +28,10 @@
   </Target>
   
   <Target Name="RunTests">
-    <Exec Command="nunit3-console.exe $(OutputPath)\PDASimulator.Tests.dll" />
+    <Exec Command="nunit3-console.exe &quot;$(OutputPath)\PDASimulator.Tests.dll&quot;" />
   </Target>
   
   <Target Name="RunTestsAppVeyor">
-    <Exec Command="nunit3-console.exe $(OutputPath)\PDASimulator.Tests.dll --result=PDASimulator.Tests.xml;format=AppVeyor" />
+    <Exec Command="nunit3-console.exe &quot;$(OutputPath)\PDASimulator.Tests.dll&quot; --result=PDASimulator.Tests.xml;format=AppVeyor" />
   </Target>
 </Project>

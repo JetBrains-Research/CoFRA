@@ -34,10 +34,10 @@
   </ItemGroup>
   
   <Target Name="RunTests">
-    <Exec Command="nunit3-console.exe $(OutputPath)\ReSharperPlugin.Tests.dll" />
+    <Exec Command="nunit3-console.exe &quot;$(OutputPath)\ReSharperPlugin.Tests.dll&quot;" />
   </Target>
   
   <Target Name="RunTestsAppVeyor">
-    <Exec Command="nunit3-console.exe $(OutputPath)\ReSharperPlugin.Tests.dll --result=ReSharperPlugin.Tests.xml;format=AppVeyor" />
+    <Exec Command="nunit3-console.exe &quot;$(OutputPath)\ReSharperPlugin.Tests.dll&quot; --result=ReSharperPlugin.Tests.xml;format=AppVeyor" />
   </Target>
 </Project>
