@@ -82,7 +82,7 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
             
             var returnedValues = GetVariablePairsFromInvoked(myObjectCreationExpression);
 
-            var statement = new InvocationStatement(location, invokedFun, passedParameters, returnedValues);
+            var statement = new InvocationStatement(location, invokedFun, passedParameters, returnedValues, true);
             
             var instruction = new Instruction(statement, MyParams.GetNewInstructionId());
             

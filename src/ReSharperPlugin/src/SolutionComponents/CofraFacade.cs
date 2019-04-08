@@ -227,6 +227,18 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
             myClient.EnqueueRequest(request, response => 
                 resultsProcessingAction(((TaintedFieldsResponse) response).TaintingFlags));
         }
+        
+        public void GetTaintedSinks(int fileIndex, Action<IEnumerable<IEnumerable<Statement>>> tracesHandler)
+        {
+            var request = new AnalysisResultsRequest(AnalysisType.TaintChecking, fileIndex);
+
+            void ResponseHandler(Response response)
+            {
+                if (response is StatementsTraceResponse traces) tracesHandler(traces.Traces);
+            }
+
+            myClient.EnqueueRequest(request, ResponseHandler);
+        }
 
         public File GetLastFile() => myLastFile;
     }

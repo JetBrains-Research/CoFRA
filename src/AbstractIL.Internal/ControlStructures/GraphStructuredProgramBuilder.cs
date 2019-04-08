@@ -112,6 +112,12 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
                 method.AddLocalVariable(localVariable);    
             }
 
+            foreach (var attribute in source.Attributes)
+            {
+                var attributeId = myProgram.GetOrCreateAttribute(attribute);
+                method.AddAttribute(attributeId);
+            }
+
             // LocalFunctions.
             if (source.LocalMethods != null)
             {

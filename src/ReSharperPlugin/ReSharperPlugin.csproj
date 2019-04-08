@@ -49,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="src\Options\" />
-    <Folder Include="src\Stages\Utils\" />
   </ItemGroup>
   
 </Project>

@@ -17,6 +17,8 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
 
         public override ICompilationResult GetResult()
         {
+            var method = MyParams.GetCurrentMethod();
+
             var declaredElemMethod = myMethodDeclaration.DeclaredElement;
             if (declaredElemMethod == null)
             {
@@ -24,16 +26,19 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
                 return new ElementCompilationResult();
             }
 
+            foreach (var attribute in myMethodDeclaration.AttributesEnumerable)
+            {
+                method.AddAttribute(attribute.Name.ShortName);
+            }
+
             var instructionBlock = GetInstructionsConnectedSequentially(MyResults);
 
-            // do not analyse locks methods itself
             if (CompilerUtils.NeedToSkipMethod(declaredElemMethod))
             {
                 MyParams.FinishCurrentMethod();
                 return new ElementCompilationResult();
             }
 
-            var method = MyParams.GetCurrentMethod();
             var baseMembers = MyParams.HierarchyMembers?.GetValuesSafe(declaredElemMethod);
             if (baseMembers != null)
             {

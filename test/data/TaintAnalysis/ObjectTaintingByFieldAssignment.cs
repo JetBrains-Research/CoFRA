@@ -13,6 +13,11 @@ namespace TaintTrackingTests
     class SinkAttribute : Attribute
     {
     }
+	
+	class Container
+	{
+		public int B;
+	}
 
     class Program
     {
@@ -26,23 +31,29 @@ namespace TaintTrackingTests
         }
 		
         [Sink]
-        private void Sink(int a)
+        private void Sink(Container c)
         {
         }
+		
+		private Container Store(int a)
+		{
+			var c = new Container();
+			c.B = a;
+			return c;
+		}
 
         static void Main(string[] args)
         {
             Program a = new Program(); 
 			
             var b = a.A;
-            var c = b;
-            var d = a.Filter(b);
-            var e = a.Filter(c);
+			var c = a.Filter(b);
 			
-            a.Sink(b);
-            a.Sink(c);
-            a.Sink(d);
-            a.Sink(e); 
+			var d = a.Store(b);
+			var e = a.Store(c);
+			
+			a.Sink(d);
+			a.Sink(e);
         }
     }
 }

@@ -10,6 +10,8 @@ using PDASimulator.SimulationCommon;
 
 namespace PDASimulator.Payloads
 {
+    using PdaExtractingGssData = EmptyGssData;
+
     public class ExtractedTransition<TContext, TTransition>
     {
         public readonly TTransition Token;
@@ -90,10 +92,6 @@ namespace PDASimulator.Payloads
             hashCode = hashCode * -1521134295 + EqualityComparer<TTransition>.Default.GetHashCode(SourceTransition);
             return hashCode;
         }
-    }
-
-    public struct PdaExtractingGssData
-    {
     }
 
     public class PdaExtractingContextProcessor<TState, TStackSymbol, TPosition, TTransition> :

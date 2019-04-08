@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Xml;
+using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
 using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Internal.ControlStructures;
@@ -20,6 +21,7 @@ using Cofra.AbstractIL.Internal.Types.Secondaries;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.Contracts.Messages.Responses;
 using Cofra.Core.Analyzes;
+using Cofra.Core.Analyzes.SourceFilterSink;
 using Cofra.Core.Util;
 
 namespace Cofra.Core
@@ -52,8 +54,15 @@ namespace Cofra.Core
             myQueuedCommits = new Queue<Action>();
         }
 
+        private void InitializeResultsCache()
+        {
+            myResultsCache.StoreResult(AnalysisType.TaintChecking, new List<List<Statement>>());
+        }
+
         public void Start()
         {
+            InitializeResultsCache();
+
             try
             {
                 RestoreProgram();
@@ -236,6 +245,15 @@ namespace Cofra.Core
             return starts;
         }
 
+        private void PerformTaintAnalysis(PerformAnalysisRequest request, IEnumerable<ResolvedMethod<int>> starts)
+        {
+            var sourceFilterSink = new SourceFilterSink(myProgramBuilder.GetProgram());
+            var sfsResults = sourceFilterSink.Analyze(starts)
+                .Select(trace => trace.ToList()).ToList();
+
+            myResultsCache.StoreResult(AnalysisType.TaintChecking, sfsResults);
+        }
+
         private Task RunAnalysis(PerformAnalysisRequest request)
         {
             myProgramLock = true;
@@ -246,9 +264,8 @@ namespace Cofra.Core
                     var program = myProgramBuilder.GetProgram();
 
                     var starts = PerformTypePropagation(out var secondaryEntities);
+                    PerformTaintAnalysis(request, starts);
 
-                    //TODO: locks
-                    /*
                     Task.Run(() =>
                     {
                         foreach (var secondaryEntity in secondaryEntities)
@@ -256,7 +273,6 @@ namespace Cofra.Core
                             secondaryEntity.DropAllCollectedPrimaries();
                         }
                     });
-                    */
                 }
                 catch (Exception e)
                 {
@@ -272,6 +288,17 @@ namespace Cofra.Core
 
         private Response GetAnalysisResults(AnalysisResultsRequest request)
         {
+            if (request.Analysis == AnalysisType.TaintChecking)
+            {
+                RunAnalysis(new PerformAnalysisRequest(AnalysisType.TaintChecking)).Wait();
+
+                var results = myResultsCache.GetResult<List<List<Statement>>>(request.Analysis);
+                return new StatementsTraceResponse(
+                    results.Where(
+                        trace => trace.Exists(
+                            statement => statement?.Location?.File == request.FileIndex)));;
+            }
+
             return new FailureResponse();
         }
 
@@ -310,9 +337,6 @@ namespace Cofra.Core
 
         private IEnumerable<bool> CheckIfClassFieldsAreTainted(CheckIfTaintedRequest request)
         {
-            //TODO: Optional
-            RunAnalysis(new PerformAnalysisRequest(AnalysisType.TaintChecking)).Wait();
-
             var program = myProgramBuilder.GetProgram();
             bool CheckField(ClassId classId, string name)
             {
@@ -362,8 +386,7 @@ namespace Cofra.Core
                 case AnalysisResultsRequest analysisResultsRequest:
                     return GetAnalysisResults(analysisResultsRequest);
                 case CheckIfTaintedRequest checkIfTaintedRequest:
-                    var taintedFields = CheckIfClassFieldsAreTainted(checkIfTaintedRequest);
-                    return new TaintedFieldsResponse(taintedFields);
+                    return new TaintedFieldsResponse(Enumerable.Empty<bool>());
                 case DropCachesRequest _:
                     myProgramBuilder = new GraphStructuredProgramBuilder();
                     myQueuedCommits.Clear();

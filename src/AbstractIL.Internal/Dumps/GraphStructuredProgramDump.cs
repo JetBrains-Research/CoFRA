@@ -23,6 +23,9 @@ namespace Cofra.AbstractIL.Internal.Dumps
         [DataMember] 
         public readonly DenseBidirectionalIndex<string> ClassFieldsIndex;
 
+        [DataMember] 
+        public readonly DenseBidirectionalIndex<string> AttributesIndex;
+
         [DataMember]
         public readonly Dictionary<ResolvedClassId, ResolvedClass<TNode>> Classes;
 
@@ -38,6 +41,7 @@ namespace Cofra.AbstractIL.Internal.Dumps
             DenseBidirectionalIndex<string> classesIndex,
             DenseBidirectionalIndex<string> methodsIndex,
             DenseBidirectionalIndex<string> classFieldsIndex,
+            DenseBidirectionalIndex<string> attributesIndex,
             Dictionary<ResolvedClassId, ResolvedClass<TNode>> classes,
             Dictionary<int, File> files)
         {
@@ -46,6 +50,7 @@ namespace Cofra.AbstractIL.Internal.Dumps
             ClassesIndex = classesIndex;
             MethodsIndex = methodsIndex;
             ClassFieldsIndex = classFieldsIndex;
+            AttributesIndex = attributesIndex;
             Classes = classes;
             Files = files;
         }

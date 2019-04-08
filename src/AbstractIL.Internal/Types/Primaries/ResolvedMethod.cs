@@ -24,6 +24,9 @@ namespace Cofra.AbstractIL.Internal.Types.Primaries
         [DataMember] 
         private readonly Dictionary<ResolvedMethodId, ResolvedMethod<TNode>> myLocalFunctions;
 
+        [DataMember] 
+        private readonly SortedSet<int> myAttributes;
+
         private bool myInvoked; 
 
         public TNode EntryPoint => Start;
@@ -53,6 +56,7 @@ namespace Cofra.AbstractIL.Internal.Types.Primaries
             myOwned = new List<TNode> {Start, Final};
             myVariables = new Dictionary<int, ResolvedLocalVariable>();
             myLocalFunctions = new Dictionary<ResolvedMethodId, ResolvedMethod<TNode>>();
+            myAttributes = new SortedSet<int>();
             AdditionalVariables = new HashSet<SecondaryEntity>();
         }
 
@@ -71,6 +75,16 @@ namespace Cofra.AbstractIL.Internal.Types.Primaries
             myVariables.Remove(id);
         }
 
+        public void AddAttribute(int id)
+        {
+            myAttributes.Add(id);
+        }
+
+        public bool HasAttribute(int id)
+        {
+            return myAttributes.Contains(id);
+        }
+
         public void AddOwnedNode(TNode node)
         {
             myOwned.Add(node);
@@ -81,6 +95,7 @@ namespace Cofra.AbstractIL.Internal.Types.Primaries
             myOwned.Clear();
             myVariables.Clear();
             myLocalFunctions.Clear();
+            myAttributes.Clear();
             ResetAdditionalVariables();
 
             myOwned.Add(Start);

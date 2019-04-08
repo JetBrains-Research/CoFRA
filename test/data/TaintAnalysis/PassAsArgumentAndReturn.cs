@@ -29,20 +29,40 @@ namespace TaintTrackingTests
         private void Sink(int a)
         {
         }
+		
+		private void PreSink(int a)
+		{
+			Sink(a);
+		}
+		
+		private int PostSource()
+		{
+			var b = A;
+			return b;
+		}
+		
+		private int Brace(int a)
+		{
+			var b = a;
+			return b;
+		}
 
         static void Main(string[] args)
         {
             Program a = new Program(); 
 			
             var b = a.A;
-            var c = b;
-            var d = a.Filter(b);
-            var e = a.Filter(c);
+			a.PreSink(b);
 			
-            a.Sink(b);
-            a.Sink(c);
-            a.Sink(d);
-            a.Sink(e); 
+			var c = a.PostSource();
+			a.Sink(c);
+			
+			var d = a.Brace(b);
+			a.Sink(d)
+			
+			var e = Filter(b);
+			var f = Brace(e);
+			a.Sink(f);
         }
     }
 }

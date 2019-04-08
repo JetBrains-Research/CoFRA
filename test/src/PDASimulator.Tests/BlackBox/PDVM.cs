@@ -38,7 +38,7 @@ namespace PDASimulator.Tests.BlackBox
 
         private class MyPDVM : TestPDVM
         {
-            public override void Action(int state, GssNode<int, PdaExtractingGssData> stack)
+            public override void Action(int state, GssNode<int, EmptyGssData> stack)
             {
                 if (state == 2)
                 {
@@ -48,7 +48,7 @@ namespace PDASimulator.Tests.BlackBox
 
             public override void Step(
                 int state, 
-                GssNode<int, PdaExtractingGssData> stack, 
+                GssNode<int, EmptyGssData> stack, 
                 int position,
                 TaggedEdge<int, string> currentTransition)
             {

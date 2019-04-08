@@ -61,6 +61,12 @@ namespace Cofra.AbstractIL.Internal.Types.Secondaries
             return mySubscriptions.IsValueCreated;
         }
 
+        public bool HasSpecificPrimary(PrimaryEntity entity)
+        {
+            return (TopLevelClosure?.Value?.Collected?.Contains(entity) ?? false) ||
+                   (BottomLevelClosure?.Value?.Collected?.Contains(entity) ?? false);
+        }
+
         public virtual void DropTransitiveClosure()
         {
             if (TopLevelClosure?.IsValueCreated == true)

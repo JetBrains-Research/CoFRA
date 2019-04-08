@@ -27,12 +27,15 @@ namespace Cofra.AbstractIL.Internal.Statements
         [DataMember]
         public readonly Dictionary<ParameterIndex, SecondaryEntity> ReturnedValues;
 
+        [DataMember] 
+        public readonly bool IsConstructor;
+
         public ResolvedInvocationStatement(
             InvocationStatement source,
             Dictionary<SecondaryEntity, ParameterIndex> passedParameters,
             Dictionary<ParameterIndex, SecondaryEntity> returnedValues, 
             Entity resolvedEntity, 
-            ResolvedMethodId resolvedMethodId) 
+            ResolvedMethodId resolvedMethodId)
             : base(source.Location)
         {
             TargetEntity = resolvedEntity;
@@ -40,6 +43,8 @@ namespace Cofra.AbstractIL.Internal.Statements
 
             PassedParameters = passedParameters;
             ReturnedValues = returnedValues;
+
+            IsConstructor = source.IsConstructor;
         }
 
         public ResolvedInvocationStatement(
@@ -55,6 +60,8 @@ namespace Cofra.AbstractIL.Internal.Statements
 
             PassedParameters = passedParameters;
             ReturnedValues = returnedValues;
+
+            IsConstructor = source.IsConstructor;
         }
 
         public override InternalStatementType InternalType => InternalStatementType.ResolvedInvocation;

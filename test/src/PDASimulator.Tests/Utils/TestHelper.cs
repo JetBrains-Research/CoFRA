@@ -21,12 +21,12 @@ namespace PDASimulator.Tests.Utils
 {
     using TestEdge = TaggedEdge<int, string>;
     
-    using TestPdaConstructingContext = PdaExtractingContext<GssNode<int, PdaExtractingGssData>, TaggedEdge<int, string>>;
-    using TestPdaConstructingGssNode = GssNode<int, PdaExtractingGssData>;
+    using TestPdaConstructingContext = PdaExtractingContext<GssNode<int, EmptyGssData>, TaggedEdge<int, string>>;
+    using TestPdaConstructingGssNode = GssNode<int, EmptyGssData>;
 
-    using PdaConstructingSimulation =  DPDASimulation<int, int, int, TaggedEdge<int, string>, PdaExtractingContext<GssNode<int, PdaExtractingGssData>, TaggedEdge<int, string>>, PdaExtractingGssData>;
+    using PdaConstructingSimulation =  DPDASimulation<int, int, int, TaggedEdge<int, string>, PdaExtractingContext<GssNode<int, EmptyGssData>, TaggedEdge<int, string>>, EmptyGssData>;
 
-    using PdaConstructingPdvmSimulation = PDVMSimulation<int, int, int, TaggedEdge<int, string>, PdaExtractingContext<GssNode<int, PdaExtractingGssData>, TaggedEdge<int, string>>, PdaExtractingGssData>;
+    using PdaConstructingPdvmSimulation = PDVMSimulation<int, int, int, TaggedEdge<int, string>, PdaExtractingContext<GssNode<int, EmptyGssData>, TaggedEdge<int, string>>, EmptyGssData>;
 
     public sealed class ReferenceEqualityComparer
         : IEqualityComparer, IEqualityComparer<object>

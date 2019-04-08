@@ -23,7 +23,7 @@ namespace ReSharperPlugin.Tests
 
             return stageManager.Stages
                 .Where(stage => stage is InterproceduralDaemonStage ||
-                                stage is TaintedEntityHighlighterDaemonStage)
+                                stage is TaintedSinksHighlighterDaemonStage)
                 .ToList();
         }
 
@@ -44,9 +44,8 @@ namespace ReSharperPlugin.Tests
         }
 
         [TestCase("PassThroughLocals")]
-        [TestCase("PassThroughClassField")]
-        [TestCase("PassAsMethodArgument")]
-        [TestCase("ReturnAsMethodResult")]
+        [TestCase("PassAsArgumentAndReturn")]
+        [TestCase("ObjectTaintingByFieldAssignment")]
         public void Execute(string source)
         {
             DoOneTest(source);

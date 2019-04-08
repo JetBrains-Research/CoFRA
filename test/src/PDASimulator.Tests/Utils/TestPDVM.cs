@@ -10,10 +10,10 @@ using QuickGraph;
 namespace PDASimulator.Tests.Utils
 {
     using TestEdge = TaggedEdge<int, string>;
-    using TestContext = PdaExtractingContext<GssNode<int, PdaExtractingGssData>, TaggedEdge<int, string>>;
+    using TestContext = PdaExtractingContext<GssNode<int, EmptyGssData>, TaggedEdge<int, string>>;
 
     public abstract class TestPDVM : 
-        PDVM<int, int, int, TestEdge, TestContext, PdaExtractingGssData>
+        PDVM<int, int, int, TestEdge, TestContext, EmptyGssData>
     {
         private readonly HashSet<TestContext> myFinals;
 
@@ -25,7 +25,7 @@ namespace PDASimulator.Tests.Utils
         }
 
         protected override void OnFinish(
-            Head<int, int, TestContext, GssNode<int, PdaExtractingGssData>> head, 
+            Head<int, int, TestContext, GssNode<int, EmptyGssData>> head, 
             TestEdge edge)
         {
             myFinals.Add(head.CurrentContext);

@@ -21,6 +21,7 @@ using JetBrains.Util;
 
 namespace Cofra.ReSharperPlugin.Stages
 {
+    /*
     [DaemonStage(LongRunningStage = true, StagesBefore = new[] {typeof(InterproceduralDaemonStage)})]
     public sealed class TaintedEntityHighlighterDaemonStage : CSharpDaemonStageBase 
     {
@@ -136,4 +137,5 @@ namespace Cofra.ReSharperPlugin.Stages
             return taintedFieldsFlags;
         }
     }
+    */
 }

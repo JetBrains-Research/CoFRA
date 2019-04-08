@@ -23,6 +23,8 @@ namespace Cofra.AbstractIL.Common.Types
         [DataMember] public readonly List<Reference> Variables = new List<Reference>();
         [DataMember] public readonly List<Method> LocalMethods = new List<Method>();
 
+        [DataMember] public readonly HashSet<String> Attributes = new HashSet<String>();
+
         public Method(MethodId id, List<Instruction> instructions, IEnumerable<InstructionId> initialInstructions)
         {
             Id = id;
@@ -61,6 +63,11 @@ namespace Cofra.AbstractIL.Common.Types
             
             Instructions.ForEach(instruction => instruction.Continuation.FillWithIndices(idToIndex));
             InitialInstructions.FillWithIndices(idToIndex);
+        }
+
+        public void AddAttribute(string attribute)
+        {
+            Attributes.Add(attribute);
         }
         
         public override string ToString()

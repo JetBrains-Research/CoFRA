@@ -10,6 +10,8 @@ using PDASimulator.DPDA;
 
 namespace PDASimulator.Utils
 {
+    using PdaExtractingGssData = EmptyGssData;
+
     public static class PdaContextDecoder
     {
         private static bool ExtractWordsInternal<TStackSymbol, TTransition>(
@@ -27,14 +29,16 @@ namespace PDASimulator.Utils
                 return true;
             }
 
-            if (isFinal(root) && 
-                (stack.IsEmpty && !root.StackTop.Pop().Any() ||
-                 root.StackTop.Symbol.Equals(stack.Peek())))
+            if (isFinal(root))
             {
-                var shouldContinue = onExtracted(accumulator);
-                if (!shouldContinue)
+                if (stack.IsEmpty && !root.StackTop.Pop().Any() ||
+                    root.StackTop.Symbol.Equals(stack.Peek()))
                 {
-                    return false;
+                    var shouldContinue = onExtracted(accumulator);
+                    if (!shouldContinue)
+                    {
+                        return false;
+                    }
                 }
             }
 

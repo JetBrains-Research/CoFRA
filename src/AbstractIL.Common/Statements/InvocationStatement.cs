@@ -18,16 +18,20 @@ namespace Cofra.AbstractIL.Common.Statements
         /// </summary>
         [DataMember] public readonly Dictionary<ParameterIndex, Reference> ReturnedValues;
 
+        [DataMember] public readonly bool IsConstructor;
+
         public InvocationStatement(
             Location location,
             InvocationTarget invocationTarget,
             IDictionary<ParameterIndex, Reference> passedParameters,
-            IDictionary<ParameterIndex, Reference> returnedValues)
+            IDictionary<ParameterIndex, Reference> returnedValues,
+            bool isConstructor = false)
             : base(location)
         {
             InvocationTarget = invocationTarget;
             PassedParameters = new Dictionary<ParameterIndex, Reference>(passedParameters);
             ReturnedValues = new Dictionary<ParameterIndex, Reference>(returnedValues);
+            IsConstructor = isConstructor;
         }
 
         public override StatementType Type => StatementType.Invocation;

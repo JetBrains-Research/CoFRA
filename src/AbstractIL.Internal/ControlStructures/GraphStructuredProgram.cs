@@ -31,6 +31,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
         public DenseBidirectionalIndex<string> Classes { get; }
         public DenseBidirectionalIndex<string> Methods { get; }
         public DenseBidirectionalIndex<string> ClassFields { get; }
+        public DenseBidirectionalIndex<string> Attributes { get; }
 
         private readonly HashSet<int> myUsedMethodIds;
 
@@ -42,6 +43,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
             Classes = new DenseBidirectionalIndex<string>();
             Methods = new DenseBidirectionalIndex<string>();
             ClassFields = new DenseBidirectionalIndex<string>();
+            Attributes = new DenseBidirectionalIndex<string>();
 
             myNodesProvider = nodesProvider;
             myOnNodeRemovedHandler = onNodeRemovedHandler;
@@ -64,6 +66,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
             Classes = dump.ClassesIndex;
             Methods = dump.MethodsIndex;
             ClassFields = dump.ClassFieldsIndex;
+            Attributes = dump.AttributesIndex;
 
             myUsedMethodIds = new HashSet<int>();
             myClasses = dump.Classes;
@@ -319,6 +322,11 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
             return id;
         }
 
+        public int GetOrCreateAttribute(string name)
+        {
+            return Attributes.FindOrAdd(name);
+        }
+
         public void ClearMethod(ResolvedMethod<TNode> method)
         {
             var toRemove = method.Methods.Keys.ToList();
@@ -407,7 +415,7 @@ namespace Cofra.AbstractIL.Internal.ControlStructures
             var edges = new List<OperationEdge<TNode>>(Edges);
             var files = myFiles.ToDictionary(pair => pair.Key, pair => pair.Value.Dump());
             return new GraphStructuredProgramDump<TNode>(
-                edges, Files, Classes, Methods, ClassFields, myClasses, myFiles);
+                edges, Files, Classes, Methods, ClassFields, Attributes, myClasses, myFiles);
         }
 
         public void DumpVariablesToDot(string fileName)
