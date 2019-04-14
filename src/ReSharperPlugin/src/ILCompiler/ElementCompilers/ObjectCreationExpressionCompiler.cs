@@ -85,8 +85,11 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
             var statement = new InvocationStatement(location, invokedFun, passedParameters, returnedValues, true);
             
             var instruction = new Instruction(statement, MyParams.GetNewInstructionId());
+
+            var returned = (LocalVariableReference) statement.ReturnedValues[new ParameterIndex(-1)];
+            returned.DefaultType = classRef.ClassId;
             
-            return new ExpressionCompilationResult(new InstructionBlock(instruction), location, reference: classRef);
+            return new ExpressionCompilationResult(new InstructionBlock(instruction), location, reference: returned);
         }
     }
 }

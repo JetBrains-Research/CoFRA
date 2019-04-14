@@ -6,11 +6,13 @@ namespace Cofra.AbstractIL.Common.Types
     [DataContract]
     public class ClassReference : Reference
     {
+        [DataMember] public bool ThisClassReference;
         [DataMember] public ClassId ClassId;
 
-        public ClassReference(ClassId classId)
+        public ClassReference(ClassId classId, bool thisClassReference = false)
         {
             ClassId = classId;
+            ThisClassReference = thisClassReference;
         }
 
         public override string ToString()

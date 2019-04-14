@@ -13,7 +13,6 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 {
     using Node = Int32;
     using State = SecondaryEntity;
-    using StackSymbol = OperationEdge<Int32>;
     using Transition = OperationEdge<Int32>;
 
     public sealed class SourceFilterSinkContextProcessor :

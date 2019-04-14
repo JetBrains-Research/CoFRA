@@ -17,9 +17,8 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 {
     using Node = Int32;
     using State = SecondaryEntity;
-    using StackSymbol = OperationEdge<Int32>;
     using Transition = OperationEdge<Int32>;
-    using Context = PdaExtractingContext<GssNode<OperationEdge<Int32>, EmptyGssData>, OperationEdge<Int32>>;
+    using Context = PdaExtractingContext<GssNode<StackSymbol, EmptyGssData>, OperationEdge<Int32>>;
     using Result = IEnumerable<IEnumerable<Statement>>;
 
     public sealed class SourceFilterSink : 
@@ -41,7 +40,7 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
         public override Result Analyze(IEnumerable<ResolvedMethod<int>> starts)
         {
             var initialState = new SourceFilterSinkPDVM.InitialDummyState();
-            var initialStackData = new StackSymbol(-1, new NopStatement(), -1);
+            var initialStackData = new StackSymbol(new OperationEdge<Node>(-1, new NopStatement(), -1), null);
             var initialContexts = new List<Context>();
             var finalContexts = new List<Context>();
 

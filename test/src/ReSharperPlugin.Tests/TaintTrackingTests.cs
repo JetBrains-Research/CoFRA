@@ -46,6 +46,11 @@ namespace ReSharperPlugin.Tests
         [TestCase("PassThroughLocals")]
         [TestCase("PassAsArgumentAndReturn")]
         [TestCase("ObjectTaintingByFieldAssignment")]
+        [TestCase("SimpleRecursion")]
+        [TestCase("MutualRecursion")]
+        [TestCase("Delegates")]
+        [TestCase("AssigningByThis")]
+        [TestCase("ObjectConstruction")]
         public void Execute(string source)
         {
             DoOneTest(source);

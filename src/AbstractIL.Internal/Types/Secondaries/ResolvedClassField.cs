@@ -14,6 +14,9 @@ namespace Cofra.AbstractIL.Internal.Types.Secondaries
         [DataMember]
         public readonly ResolvedClassId ClassId;
 
+        [DataMember] 
+        public readonly bool ThisClassField;
+
         [DataMember]
         public readonly int VariableId;
 

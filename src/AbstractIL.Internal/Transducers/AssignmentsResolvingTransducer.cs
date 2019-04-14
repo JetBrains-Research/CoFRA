@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofra.AbstractIL.Common.Statements;
+using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Internal.ControlStructures;
 using Cofra.AbstractIL.Internal.Resolvers;
 using Cofra.AbstractIL.Internal.Statements;
@@ -32,8 +33,13 @@ namespace Cofra.AbstractIL.Internal.Transducers
                 var targetSecondaryEntity = targetEntity as SecondaryEntity;
                 Trace.Assert(targetSecondaryEntity != null);
 
-                var newStatement =
-                    new ResolvedAssignmentStatement(assignment.Location, sourceEntity, targetSecondaryEntity);
+                var referencedByThis = 
+                    assignment.Target is ClassFieldReference classFieldReference &&
+                    classFieldReference.Owner is ClassReference classReference &&
+                    classReference.ThisClassReference;
+
+                var newStatement = new ResolvedAssignmentStatement(
+                    assignment.Location, sourceEntity, targetSecondaryEntity, referencedByThis);
 
                 targetProgram.AddEdge(new OperationEdge<TNode>(source, newStatement, target));
 

@@ -18,10 +18,9 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 {
     using Node = Int32;
     using State = SecondaryEntity;
-    using StackSymbol = OperationEdge<Int32>;
     using Transition = OperationEdge<Int32>;
-    using GssNode = GssNode<OperationEdge<Int32>, EmptyGssData>;
-    using Context = PdaExtractingContext<GssNode<OperationEdge<Int32>, EmptyGssData>, OperationEdge<Int32>>;
+    using GssNode = GssNode<StackSymbol, EmptyGssData>;
+    using Context = PdaExtractingContext<GssNode<StackSymbol, EmptyGssData>, OperationEdge<Int32>>;
 
     public sealed class SourceFilterSinkPDVM : 
         PDVM<State, StackSymbol, Node, Transition, Context, EmptyGssData>
@@ -84,11 +83,11 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
                     break;
 
                 case InternalStatementType.Return:
-                    ProcessReturn(state, (InternalReturnStatement) statement, stack);
+                    ProcessReturn(state, stack, (InternalReturnStatement) statement);
                     break;
 
                 case InternalStatementType.ResolvedAssignment:
-                    ProcessAssignment(state, (ResolvedAssignmentStatement) statement);
+                    ProcessAssignment(state, stack, (ResolvedAssignmentStatement) statement);
                     break;
             }
         }
@@ -142,7 +141,7 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
             return Enumerable.Empty<IInvokable<Node>>();
         }
 
-        private void ProcessAssignment(State state, ResolvedAssignmentStatement assignment)
+        private void ProcessAssignment(State state, GssNode stack, ResolvedAssignmentStatement assignment)
         {
             if (!(state is ResolvedLocalVariable))
             {
@@ -155,21 +154,28 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
                 return;
             }
 
-            var closestTarget = Utils.FindClosestLocalOwner(assignment.Target);
-            if (closestTarget == null)
+            if (assignment.TargetReferencedByThis && stack.Symbol.Owner != null)
             {
-                return;
+                Accept(stack.Symbol.Owner);
             }
-
-            var closestSource = Utils.FindClosestLocalOwner(assignment.Source as SecondaryEntity);
-            if (closestSource == null)
+            else
             {
-                return;
-            }
+                var closestTarget = Utils.FindClosestLocalOwner(assignment.Target);
+                if (closestTarget == null)
+                {
+                    return;
+                }
 
-            if (closestSource.Equals(state))
-            {
-                Accept(closestTarget);
+                var closestSource = Utils.FindClosestLocalOwner(assignment.Source as SecondaryEntity);
+                if (closestSource == null)
+                {
+                    return;
+                }
+
+                if (closestSource.Equals(state))
+                {
+                    Accept(closestTarget);
+                }
             }
         }
 
@@ -210,7 +216,8 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
                         if (!isFilter)
                         {
                             var nextState = target.Variables[parameterIndex];
-                            Push(nextState, currentTransition, target.EntryPoint);
+                            var frame = new StackSymbol(currentTransition, invocation);
+                            Push(nextState, frame, target.EntryPoint);
                         }
                     }
                 }
@@ -219,23 +226,30 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
             {
                 foreach (var target in targets)
                 {
-                    Push(state, currentTransition, target.EntryPoint);
+                    var frame = new StackSymbol(currentTransition, invocation);
+                    Push(state, frame, target.EntryPoint);
                 }
             }
         }
 
         private void ProcessReturn(
             State state,
-            InternalReturnStatement returnStatement,
-            GssNode<StackSymbol, EmptyGssData> stack)
+            GssNode<StackSymbol, EmptyGssData> stack,
+            InternalReturnStatement returnStatement)
         {
             if (!(state is ResolvedLocalVariable localState))
             {
                 return;
             }
 
-            if (!(stack.Symbol.Statement is ResolvedInvocationStatement<Node> callingStatement))
+            if (!(stack.Symbol.CallSite.Statement is ResolvedInvocationStatement<Node> callingStatement))
             {
+                return;
+            }
+
+            if (state.Equals(stack.Symbol.Owner))
+            {
+                Pop(state, stack.Symbol.CallSite.Target);
                 return;
             }
 
@@ -246,7 +260,7 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 
             if (exists)
             {
-                Pop(nextState, stack.Symbol.Target);
+                Pop(nextState, stack.Symbol.CallSite.Target);
             }
         }
 

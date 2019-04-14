@@ -141,7 +141,7 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
             if (childReference == null || myReferenceExpression.FirstChild is IThisExpression)
             {
                 //self field || method || property
-                return new ClassReference(MyParams.GetCurrentClass().ClassId);
+                return new ClassReference(MyParams.GetCurrentClass().ClassId, true);
             }
 
             return childReference;

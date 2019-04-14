@@ -32,7 +32,8 @@ namespace Cofra.AbstractIL.Internal.Restorers
 
             Trace.Assert(target is SecondaryEntity);
 
-            return new ResolvedAssignmentStatement(assignment.Location, source, (SecondaryEntity) target);
+            return new ResolvedAssignmentStatement(
+                assignment.Location, source, (SecondaryEntity) target, assignment.TargetReferencedByThis);
         }
     }
 }
