@@ -14,10 +14,10 @@ bld/
 
 *.user
 *.nupkg
+*.zip
 
 packages/
 
-*.nupkg
 *TestResult.xml
 
-install.cmd
+scripts/install.cmd

@@ -1,0 +1,11 @@
+<idea-plugin>
+  <depends>com.intellij.modules.rider</depends>
+  <idea-version since-build="183.1" until-build="191.*"/>
+  
+  <id>com.wtf.cofra</id>
+  <version>0.1.0</version>
+  <name>CoFRA Integration</name>
+  <vendor url="https://www.example.com">NII</vendor>
+  <description>ReSharper plugin for interprocedural analysis.</description>
+  <change-notes>Initial release.</change-notes>
+</idea-plugin>

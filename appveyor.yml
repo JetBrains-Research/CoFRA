@@ -24,10 +24,11 @@ before_build:
   dotnet restore CoFRA.sln
 
 after_build:
-  .\build_plugin.cmd
+  .\scripts\build_plugin.cmd
 
 test_script:
-  .\run_tests_appveyor.cmd
+  .\scripts\run_tests_appveyor.cmd
 
 artifacts:
   - path: 'Cofra.ReSharperPlugin.0.1.0.nupkg'
+  - path: 'Cofra.RiderPlugin.0.1.0.nupkg'
