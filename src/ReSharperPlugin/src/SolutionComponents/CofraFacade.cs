@@ -126,7 +126,7 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
             const string cacheDirectoryName = "InterproceduralAnalysis";
             const string databaseName = "database.zip";
 
-            var librariesPath = GetLibrariesPath();
+            var librariesPath = Assembly.GetExecutingAssembly().GetPath().Directory;
             var servicePath = librariesPath.Combine(serviceDirectoryName).Combine(executableFileName);
             var testServicePath = librariesPath.Combine(executableFileName);
             var servicePort = GetServicePort();

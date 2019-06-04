@@ -9,6 +9,7 @@ using Cofra.AbstractIL.Internal.Statements;
 using Cofra.AbstractIL.Internal.Types;
 using Cofra.AbstractIL.Internal.Types.Primaries;
 using Cofra.AbstractIL.Internal.Types.Secondaries;
+using Cofra.Core.Analyzes.PDVM;
 using PDASimulator.DataStructures.GSS;
 using PDASimulator.Payloads;
 using PDASimulator.PDVM;
@@ -18,26 +19,17 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 {
     using Node = Int32;
     using State = SecondaryEntity;
-    using Transition = OperationEdge<Int32>;
-    using GssNode = GssNode<StackSymbol, EmptyGssData>;
-    using Context = PdaExtractingContext<GssNode<StackSymbol, EmptyGssData>, OperationEdge<Int32>>;
 
     public sealed class SourceFilterSinkPDVM : 
-        PDVM<State, StackSymbol, Node, Transition, Context, EmptyGssData>
+        ILProcessingPDVM<State, StackSymbol>
     {
-        private readonly GraphStructuredProgram<Node> myProcessingProgram;
-
         private readonly int mySinkAttributeId;
         private readonly int myFilterAttributeId;
 
-        public event Action<Head<State, Node, Context, GssNode>, Transition> OnFinishEvent;
-
-        public SourceFilterSinkPDVM(GraphStructuredProgram<int> processingProgram)
+        public SourceFilterSinkPDVM(GraphStructuredProgram<int> processingProgram) : base(processingProgram)
         {
-            myProcessingProgram = processingProgram;
-
-            mySinkAttributeId = myProcessingProgram.GetOrCreateAttribute(Constants.SinkAttribute);
-            myFilterAttributeId = myProcessingProgram.GetOrCreateAttribute(Constants.FilterAttribute);
+            mySinkAttributeId = Program.GetOrCreateAttribute(Constants.SinkAttribute);
+            myFilterAttributeId = Program.GetOrCreateAttribute(Constants.FilterAttribute);
         }
 
         public override void Action(
@@ -61,7 +53,7 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
             State state, 
             GssNode<StackSymbol, EmptyGssData> stack, 
             Node position, 
-            Transition currentTransition)
+            OperationEdge<Node> currentTransition)
         {
             var commonStatement = currentTransition.Statement;
             if (commonStatement.Type != StatementType.Internal)
@@ -92,56 +84,7 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
             }
         }
 
-        protected override void OnFinish(
-            Head<State, int, Context, GssNode<StackSymbol, EmptyGssData>> head, 
-            Transition sourceTransition)
-        {
-            OnFinishEvent?.Invoke(head, sourceTransition);
-        }
-        
-        private IEnumerable<IInvokable<Node>> CollectInstances(Entity reference, ResolvedMethodId targetId)
-        {
-            if (reference is ResolvedClassId staticClass)
-            {
-                IEnumerable<IInvokable<Node>> Iterator(ResolvedMethod<Node> method)
-                {
-                    if (method != null)
-                    {
-                        yield return method;
-                    }
-                }
-
-                var resolvedMethod = myProcessingProgram.FindClassById(staticClass).FindMethodInFullHierarchy(targetId);
-                return Iterator(resolvedMethod);
-            }
-
-            if (reference is SecondaryEntity secondary)
-            {
-                return secondary.CollectedPrimaries.Select(
-                    type =>
-                    {
-                        if (type is ResolvedClassId classId)
-                        {
-                            var target = myProcessingProgram
-                                .FindClassById(classId)
-                                .FindMethodInFullHierarchy(targetId);
-
-                            return (IInvokable<Node>) target;
-                        }
-
-                        if (type is IInvokable<Node> invokable)
-                        {
-                            return invokable;
-                        }
-
-                        return null;
-                    }).Where(target => target != null);
-            }
-
-            return Enumerable.Empty<IInvokable<Node>>();
-        }
-
-        private void ProcessAssignment(State state, GssNode stack, ResolvedAssignmentStatement assignment)
+        private void ProcessAssignment(State state, GssNode<StackSymbol, EmptyGssData> stack, ResolvedAssignmentStatement assignment)
         {
             if (!(state is ResolvedLocalVariable))
             {
@@ -182,9 +125,9 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
         private void ProcessInvocation(
             State state,
             ResolvedInvocationStatement<Node> invocation,
-            Transition currentTransition)
+            OperationEdge<Node> currentTransition)
         {
-            var targets = CollectInstances(invocation.TargetEntity, invocation.TargetMethodId);
+            var targets = CollectPossibleTargets(invocation.TargetEntity, invocation.TargetMethodId);
             var passedParameters = invocation.PassedParameters.ToDictionary(
                 pair => Utils.FindClosestLocalOwner(pair.Key), pair => pair.Value);
 
