@@ -22,6 +22,8 @@ build:
   
 before_build:
   dotnet restore CoFRA.sln
+  
+  dotnet restore .\src\ReSharperPlugin\RiderPlugin.csproj
 
 after_build:
   .\scripts\build_plugin.cmd
