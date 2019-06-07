@@ -8,20 +8,20 @@
     <TargetFramework>net472</TargetFramework>
     <Version>0.1</Version>
     <Authors>Artem Gorokhov, Ilya Nozhkin</Authors>
-    <Product>Cofra.ReSharperPlugin</Product>
-	<NuspecFile>ReSharperPlugin.$(Configuration).nuspec</NuspecFile>
+    <Product>Cofra.RiderPlugin</Product>
+	<NuspecFile>RiderPlugin.$(Configuration).nuspec</NuspecFile>
 	<RootNamespace>Cofra.ReSharperPlugin</RootNamespace>
-	<AssemblyName>Cofra.ReSharperPlugin</AssemblyName>
+	<AssemblyName>Cofra.RiderPlugin</AssemblyName>
   </PropertyGroup>
   
   <ItemGroup>
-    <PluginAssemblies Include="$(OutputPath)\Cofra.ReSharperPlugin.dll" />
+    <PluginAssemblies Include="$(OutputPath)\Cofra.RiderPlugin.dll" />
 	<PluginAssemblies Include="$(OutputPath)\Cofra.AbstractIL.Common.dll" />
 	<PluginAssemblies Include="$(OutputPath)\Cofra.Contracts.dll" />
   </ItemGroup>
   
   <Target Name="CopyAssemblies" AfterTargets="CopyFilesToOutputDirectory">
-    <Copy SourceFiles="@(PluginAssemblies)" DestinationFolder="bin\Plugin" />
+    <Copy SourceFiles="@(PluginAssemblies)" DestinationFolder="bin\PluginRider" />
   </Target>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.1.1" />
+    <PackageReference Include="JetBrains.Rider.SDK" Version="2019.1.1" />
   </ItemGroup>
 
   <ItemGroup>

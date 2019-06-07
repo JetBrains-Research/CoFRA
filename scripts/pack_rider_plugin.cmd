@@ -8,7 +8,7 @@ mkdir "tmp/Cofra.RiderPlugin.0.1.0/dotnet"
 
 xcopy /e "./scripts/data/Rider" "./tmp/Cofra.RiderPlugin.0.1.0"
 
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('Cofra.ReSharperPlugin.0.1.0.nupkg', 'unzipped'); }"
+powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('Cofra.RiderPlugin.0.1.0.nupkg', 'unzipped'); }"
 xcopy /e "./unzipped/DotFiles" "./tmp/Cofra.RiderPlugin.0.1.0/dotnet"
 
 REM powershell.exe -nologo -noprofile -command "Compress-Archive -Force -Path tmp/* -DestinationPath Cofra.RiderPlugin.0.1.0.zip"

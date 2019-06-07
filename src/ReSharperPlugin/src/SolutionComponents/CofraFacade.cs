@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -16,27 +14,13 @@ using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.Contracts.Messages.Responses;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.ReSharperPlugin.RemoteService;
-using DevExpress.Utils.About;
-using JetBrains.Application.changes;
-using JetBrains.Application.Settings;
 using JetBrains.Application.Threading;
-using JetBrains.DataFlow;
-using JetBrains.DocumentManagers;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Caches;
-using JetBrains.ProjectModel.DataContext;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Psi.Caches.Persistence;
 using JetBrains.Util;
-using JetBrains.ProjectModel.Impl;
 using JetBrains.ReSharper.Daemon.Impl;
-using JetBrains.ReSharper.Daemon.SolutionAnalysis.FileImages;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl;
-using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.ReSharper.Psi.Tree;
 using File = Cofra.AbstractIL.Common.ControlStructures.File;
 
 namespace Cofra.ReSharperPlugin.SolutionComponents
