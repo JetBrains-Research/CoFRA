@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,10 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\PDASimulator\PDASimulator.csproj" />
   </ItemGroup>
-
-  <Target Name="CopyAssemblies" AfterTargets="CopyFilesToOutputDirectory">
-    <Copy SourceFiles="@(PluginAssemblies)" DestinationFolder="bin\Plugin" />
-  </Target>
   
   <Target Name="RunTests">
     <Exec Command="nunit3-console.exe &quot;$(OutputPath)\PDASimulator.Tests.dll&quot;" />

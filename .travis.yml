@@ -1,6 +1,5 @@
 language: csharp
-mono:
-  - latest
+mono: none
 dotnet: 2.1.503
 before_script:
   - dotnet restore CoFRA_RiderOnly.sln
