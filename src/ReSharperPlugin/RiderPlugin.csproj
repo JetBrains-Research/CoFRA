@@ -1,11 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
   <!--<ItemGroup>
     <ReferencePath Inlude="@(Reference->HasMetadata('HintPath')->'$(MSBuildProjectDirectory)\%(HintPath)')" />
   </ItemGroup>-->
   
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
     <Version>0.1</Version>
     <Authors>Artem Gorokhov, Ilya Nozhkin</Authors>
     <Product>Cofra.RiderPlugin</Product>
@@ -38,7 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Rider.SDK" Version="2019.1.1" />
+    <PackageReference Include="JetBrains.Rider.SDK" Version="2019.1.2" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NETCore.Targets" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

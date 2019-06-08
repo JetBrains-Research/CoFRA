@@ -1,16 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
     <RootNamespace>Cofra.AbstractIL.Internal</RootNamespace>
     <AssemblyName>Cofra.AbstractIL.Internal</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNet.Contracts" Version="1.10.20606.1" />
-    <PackageReference Include="FSharp.Core" Version="4.5.4" />
-    <PackageReference Include="FSharpx.Collections.Experimental" Version="1.17.0" />
-    <PackageReference Include="YC.QuickGraph" Version="3.7.4" />
+    <PackageReference Include="FSharp.Core" Version="4.6.2" />
+    <PackageReference Include="FSharpx.Collections.Experimental" Version="2.0.0" />
+    <PackageReference Include="YC.QuickGraph" Version="3.7.5-deta" />
   </ItemGroup>
 
   <ItemGroup>
