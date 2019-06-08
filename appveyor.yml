@@ -27,6 +27,7 @@ before_build:
 
 after_build:
   .\scripts\build_plugin.cmd
+  
   .\scripts\pack_rider_plugin.cmd
 
 test_script:
