@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <RootNamespace>Cofra.ReSharperPlugin</RootNamespace>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**</DefaultItemExcludes>
+    <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+</Project>

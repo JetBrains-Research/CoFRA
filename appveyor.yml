@@ -21,14 +21,13 @@ build:
   verbosity: normal
   
 before_build:
-  dotnet restore CoFRA.sln
-  
-  dotnet restore .\src\ReSharperPlugin\RiderPlugin.csproj
+  - dotnet restore CoFRA.sln
+  - dotnet restore .\src\ReSharperPlugin\RiderPlugin.csproj
+  - dotnet restore .\src\ReSharperPlugin\ReSharperPlugin.csproj
 
 after_build:
-  .\scripts\build_plugin.cmd
-  
-  .\scripts\pack_rider_plugin.cmd
+  - .\scripts\build_plugin.cmd 
+  - .\scripts\pack_rider_plugin.cmd
 
 test_script:
   .\scripts\run_tests_appveyor.cmd
