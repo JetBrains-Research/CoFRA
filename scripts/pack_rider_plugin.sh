@@ -1,3 +1,5 @@
+set -e
+
 old_wd=$(pwd)
 cd `dirname $0`
 cd ../

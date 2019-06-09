@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -31,7 +31,7 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   
-  <Target Name="CustomCollectFiles" AfterTargets="Publish">
+  <Target Name="CustomCollectFiles" AfterTargets="Publish" Condition=" '$(OS)' == 'Windows_NT' ">
 	<MsBuild Projects="Core.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472"/>
 	
 	<ItemGroup>
@@ -55,8 +55,5 @@
   <ItemGroup>
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
-  
-  <Target Name="BundleExe" AfterTargets="CopyAllFilesToSingleFolderForPackage"  BeforeTargets="MSDeployPublish">
-  </Target>
 
 </Project>

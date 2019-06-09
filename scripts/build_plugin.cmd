@@ -8,3 +8,5 @@ dotnet pack src/ReSharperPlugin/ReSharperPlugin.csproj -c Release -o ../../
 dotnet pack src/ReSharperPlugin/RiderPlugin.csproj -c Release -o ../../
 
 cd %old_wd%
+
+if %errorlevel% neq 0 exit /b %errorlevel%

@@ -18,3 +18,5 @@ rmdir /s /q unzipped
 rmdir /s /q tmp
 
 cd %old_wd%
+
+if %errorlevel% neq 0 exit /b %errorlevel%

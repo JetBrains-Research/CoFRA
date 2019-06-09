@@ -9,3 +9,5 @@ dotnet msbuild test/src/PDASimulator.Tests/PDASimulator.Tests.csproj -t:RunTests
 dotnet msbuild test/src/ReSharperPlugin.Tests/ReSharperPlugin.Tests.csproj -t:RunTestsAppVeyor -p:Configuration=Release
 
 cd %old_wd%
+
+if %errorlevel% neq 0 exit /b %errorlevel%
