@@ -1,17 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Cofra.AbstractIL.Common.ControlStructures;
 using Cofra.AbstractIL.Common.Statements;
 using Cofra.AbstractIL.Common.Types;
-using Cofra.AbstractIL.Common.Types.AnalysisSpecific;
 using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Common.Types.InvocationTargets;
 using Cofra.ReSharperPlugin.ILCompiler.CompilationResults;
-using JetBrains.ReSharper.Psi;
+using JetBrains.Collections;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.Util;
 
 namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
 {

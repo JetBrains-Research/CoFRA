@@ -17,67 +17,31 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
 {
     using Node = Int32;
     using State = SecondaryEntity;
-    using Transition = OperationEdge<Int32>;
-    using Context = PdaExtractingContext<GssNode<StackSymbol, EmptyGssData>, OperationEdge<Int32>>;
-    using Result = IEnumerable<IEnumerable<Statement>>;
 
     public sealed class SourceFilterSink : 
-        PdvmBasedAnalysis<State, StackSymbol, Context, EmptyGssData, Result>
+        PathsExtractingAnalysis<State, StackSymbol>
     {
         private readonly GraphStructuredProgram<Node> myProgram;
 
         private static readonly Func<
             GraphStructuredProgram<int>, 
-            Func<PDVM<State, StackSymbol, Node, Transition, Context, EmptyGssData>>> getPdvmProvider =
+            Func<SourceFilterSinkPDVM>> getPdvmProvider =
             program => () => new SourceFilterSinkPDVM(program);
 
         public SourceFilterSink(GraphStructuredProgram<int> program)
-               : base(program, new SourceFilterSinkContextProcessor(), getPdvmProvider(program))
+               : base(program, getPdvmProvider(program))
         {
             myProgram = program;
         }
 
-        public override Result Analyze(IEnumerable<ResolvedMethod<int>> starts)
+        protected override IEnumerable<Statement> FormatTrace(IEnumerable<Statement> path)
         {
-            var initialState = new SourceFilterSinkPDVM.InitialDummyState();
-            var initialStackData = new StackSymbol(new OperationEdge<Node>(-1, new NopStatement(), -1), null);
-            var initialContexts = new List<Context>();
-            var finalContexts = new List<Context>();
-
-            foreach (var start in starts)
-            {
-                var rootContext = InternalSimulation.Load(start.EntryPoint, initialState, initialStackData);
-                initialContexts.Add(rootContext);
-            }
-
-            var pdvm = (SourceFilterSinkPDVM) InternalSimulation.Pdvm;
-            pdvm.OnFinishEvent += (head, lastTransition) => finalContexts.Add(head.CurrentContext);
-
-            InternalSimulation.Run();
-
-            var finalContextSet = finalContexts.ToHashSet();
-            var results = new List<IEnumerable<Statement>>();
-            foreach (var initialContext in initialContexts)
-            {
-                PdaContextDecoder.ExtractWords(
-                    initialContext,
-                    context => finalContextSet.Contains(context),
-                    0,
-                    word =>
-                    {
-                        results.Add(word.Select(symbol => symbol?.Statement));
-                        return true;
-                    },
-                    _ => { });
-            }
-
-            var formattedResults = results.Select(
-                trace => trace
+            return path
                     .SkipWhile(statement => statement is ResolvedInvocationStatement<Node>)
                     .Select<Statement, Statement>(statement =>
                     {
                         if (statement is ResolvedInvocationStatement<Node> invocation)
-                            return new InfoStatement(invocation.Location, 
+                            return new InfoStatement(invocation.Location,
                                 myProgram.Methods.GetKey(invocation.TargetMethodId.GlobalId));
 
                         if (statement is ResolvedAssignmentStatement assignment)
@@ -87,9 +51,13 @@ namespace Cofra.Core.Analyzes.SourceFilterSink
                             return new ReturnStatement(statement.Location, null);
 
                         return null;
-                    }).Where(statement => statement != null));
-
-            return formattedResults;
+                    }).Where(statement => statement != null);
         }
+
+        protected override State InitialState { get; } 
+            = new SourceFilterSinkPDVM.InitialDummyState();
+
+        protected override StackSymbol InitialStackSymbol { get; } 
+            = new StackSymbol(new OperationEdge<Node>(-1, new NopStatement(), -1), null);
     }
 }

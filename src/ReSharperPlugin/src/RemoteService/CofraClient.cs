@@ -7,6 +7,7 @@ using System.Xml;
 using Cofra.Contracts.Messages;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.Contracts.Messages.Responses;
+using JetBrains.Diagnostics;
 using JetBrains.Util;
 
 namespace Cofra.ReSharperPlugin.RemoteService

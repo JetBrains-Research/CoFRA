@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cofra.Contracts</RootNamespace>
     <Version>0.0.1</Version>
     <PackageId>Cofra.Contracts</PackageId>

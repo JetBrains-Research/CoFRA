@@ -6,6 +6,7 @@ using Cofra.AbstractIL.Common.Types;
 using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.AbstractIL.Common.Types.InvocationTargets;
 using Cofra.ReSharperPlugin.ILCompiler.CompilationResults;
+using JetBrains.Collections;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl.Special;

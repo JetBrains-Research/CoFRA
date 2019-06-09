@@ -1,0 +1,8 @@
+language: csharp
+mono: none
+dotnet: 2.1.503
+before_script:
+  - dotnet restore CoFRA_RiderOnly.sln
+script:
+  - ./scripts/build_plugin.sh
+  - ./scripts/pack_rider_plugin.sh

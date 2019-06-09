@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -16,27 +14,13 @@ using Cofra.AbstractIL.Common.Types.Ids;
 using Cofra.Contracts.Messages.Responses;
 using Cofra.Contracts.Messages.Requests;
 using Cofra.ReSharperPlugin.RemoteService;
-using DevExpress.Utils.About;
-using JetBrains.Application.changes;
-using JetBrains.Application.Settings;
 using JetBrains.Application.Threading;
-using JetBrains.DataFlow;
-using JetBrains.DocumentManagers;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Caches;
-using JetBrains.ProjectModel.DataContext;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Psi.Caches.Persistence;
 using JetBrains.Util;
-using JetBrains.ProjectModel.Impl;
 using JetBrains.ReSharper.Daemon.Impl;
-using JetBrains.ReSharper.Daemon.SolutionAnalysis.FileImages;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl;
-using JetBrains.ReSharper.Psi.Modules;
-using JetBrains.ReSharper.Psi.Tree;
 using File = Cofra.AbstractIL.Common.ControlStructures.File;
 
 namespace Cofra.ReSharperPlugin.SolutionComponents
@@ -117,48 +101,98 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
         {
             return FreeTcpPort();
         }
+
+        private bool DotNetCorePresent()
+        {
+            var info = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "--info",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var process = new Process {StartInfo = info};
+            process.Start();
+            process.WaitForExit();
+            return process.ExitCode == 0;
+        }
+        
+        private ProcessStartInfo PrepareProcessStartInfo(
+            bool dotNetCore, FileSystemPath servicePath, 
+            FileSystemPath librariesPath, FileSystemPath databasePath, int servicePort)
+        { 
+            return dotNetCore ? 
+                new ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    Arguments = $"\"{servicePath.FullPath}\" --as-service --port {servicePort} " +
+                                $"--database \"{databasePath}\"",
+                    WorkingDirectory = librariesPath.FullPath,
+                    UseShellExecute = false,
+                    CreateNoWindow = false
+                } 
+                :
+                new ProcessStartInfo
+                {
+                    FileName = servicePath.FullPath,
+                    Arguments = $"--as-service --port {servicePort} " +
+                                $"--database \"{databasePath}\"",
+                    WorkingDirectory = librariesPath.FullPath,
+                    UseShellExecute = false,
+                    CreateNoWindow = false
+                };
+        }
+
+        private (bool dotNetCore, FileSystemPath servicePath) DetectServicePath()
+        {
+            const string executableFileNameExe = "Cofra.Core.exe";
+            const string executableFileNameDll = "Cofra.Core.dll";
+            const string serviceDirectoryName = "CoFRA";
+
+            bool dotNetCore = DotNetCorePresent();
+
+            var librariesPath = Assembly.GetExecutingAssembly().GetPath().Directory;
+            bool isTest = !librariesPath.Combine(serviceDirectoryName).ExistsDirectory;
+            
+            var servicePath = isTest ? librariesPath : librariesPath.Combine(serviceDirectoryName);
+
+            var possibleDll = servicePath.Combine(executableFileNameDll);
+            if (possibleDll.ExistsFile && dotNetCore)
+            {
+                servicePath = possibleDll;
+            }
+            else
+            {
+                servicePath = servicePath.Combine(executableFileNameExe);
+                dotNetCore = false;
+            }
+
+            return (dotNetCore, servicePath);
+        }
         
         private void SessionBody()
         {
             //TODO: move to the class fields or settings
-            const string executableFileName = "Cofra.Core.exe";
-            const string serviceDirectoryName = "CoFRA";
             const string cacheDirectoryName = "InterproceduralAnalysis";
             const string databaseName = "database.zip";
 
-            var librariesPath = GetLibrariesPath();
-            var servicePath = librariesPath.Combine(serviceDirectoryName).Combine(executableFileName);
-            var testServicePath = librariesPath.Combine(executableFileName);
-            var servicePort = GetServicePort();
+            var librariesPath = Assembly.GetExecutingAssembly().GetPath().Directory;
 
+            var servicePort = GetServicePort();
             var caches = mySolution.GetComponent<SolutionCaches>();
             var databasePath = caches.GetCacheFolder()
                 .Combine(cacheDirectoryName)
                 .Combine(databaseName);
 
-            if (!(servicePath.IsAbsolute && servicePath.ExistsFile))
-            {
-                servicePath = testServicePath;
-            }
+            var (dotNetCore, servicePath) = DetectServicePath();
 
             if (servicePath.IsAbsolute && servicePath.ExistsFile)
             {
-                var processInfo =
-                    new ProcessStartInfo
-                    {
-                        FileName = servicePath.FullPath,
-                        Arguments = $"--as-service --port {servicePort} " +
-                                    $"--database \"{databasePath}\"",
-                        WorkingDirectory = librariesPath.FullPath,
-                        UseShellExecute = false,
-                        CreateNoWindow = false
-                    };
+                var processInfo = PrepareProcessStartInfo(
+                        dotNetCore, servicePath, librariesPath, databasePath, servicePort);
 
-                var process =
-                    new Process
-                    {
-                        StartInfo = processInfo
-                    };
+                var process = new Process {StartInfo = processInfo};
 
                 process.Start();
 

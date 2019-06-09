@@ -10,6 +10,7 @@ using Cofra.ReSharperPlugin.Stages.Utils;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Settings;
+using JetBrains.Diagnostics;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
