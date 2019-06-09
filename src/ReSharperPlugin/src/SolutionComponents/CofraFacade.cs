@@ -101,6 +101,22 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
         {
             return FreeTcpPort();
         }
+
+        private bool DotNetCorePresent()
+        {
+            var info = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "--info",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var process = new Process {StartInfo = info};
+            process.Start();
+            process.WaitForExit();
+            return process.ExitCode == 0;
+        }
         
         private ProcessStartInfo PrepareProcessStartInfo(
             bool dotNetCore, FileSystemPath servicePath, 
@@ -127,46 +143,56 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
                     CreateNoWindow = false
                 };
         }
-        
-        private void SessionBody()
+
+        private (bool dotNetCore, FileSystemPath servicePath) DetectServicePath()
         {
-            //TODO: move to the class fields or settings
             const string executableFileNameExe = "Cofra.Core.exe";
             const string executableFileNameDll = "Cofra.Core.dll";
             const string serviceDirectoryName = "CoFRA";
-            const string cacheDirectoryName = "InterproceduralAnalysis";
-            const string databaseName = "database.zip";
-            
-            bool dotNetCore = false;
+
+            bool dotNetCore = DotNetCorePresent();
 
             var librariesPath = Assembly.GetExecutingAssembly().GetPath().Directory;
-            var servicePath = librariesPath.Combine(serviceDirectoryName);
-            if (!servicePath.Combine(executableFileNameExe).ExistsFile)
+            bool isTest = !librariesPath.Combine(serviceDirectoryName).ExistsDirectory;
+            
+            var servicePath = isTest ? librariesPath : librariesPath.Combine(serviceDirectoryName);
+
+            var possibleDll = servicePath.Combine(executableFileNameDll);
+            if (possibleDll.ExistsFile && dotNetCore)
             {
-                dotNetCore = true;
-                servicePath = servicePath.Combine(executableFileNameDll);
+                servicePath = possibleDll;
             }
             else
             {
                 servicePath = servicePath.Combine(executableFileNameExe);
+                dotNetCore = false;
             }
-            
+
+            return (dotNetCore, servicePath);
+        }
+        
+        private void SessionBody()
+        {
+            //TODO: move to the class fields or settings
+            const string cacheDirectoryName = "InterproceduralAnalysis";
+            const string databaseName = "database.zip";
+
+            var librariesPath = Assembly.GetExecutingAssembly().GetPath().Directory;
+
             var servicePort = GetServicePort();
             var caches = mySolution.GetComponent<SolutionCaches>();
             var databasePath = caches.GetCacheFolder()
                 .Combine(cacheDirectoryName)
                 .Combine(databaseName);
 
+            var (dotNetCore, servicePath) = DetectServicePath();
+
             if (servicePath.IsAbsolute && servicePath.ExistsFile)
             {
                 var processInfo = PrepareProcessStartInfo(
                         dotNetCore, servicePath, librariesPath, databasePath, servicePort);
 
-                var process =
-                    new Process
-                    {
-                        StartInfo = processInfo
-                    };
+                var process = new Process {StartInfo = processInfo};
 
                 process.Start();
 

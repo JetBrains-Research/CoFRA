@@ -1,14 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <TargetFrameworks>net472</TargetFrameworks>
-  </PropertyGroup>
-    
-  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
     
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cofra.AbstractIL.Common</RootNamespace>
     <Version>0.0.1</Version>
     <PackageId>Cofra.AbstractIL.Common</PackageId>

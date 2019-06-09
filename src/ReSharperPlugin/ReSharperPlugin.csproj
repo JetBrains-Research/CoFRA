@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <!--<ItemGroup>
-    <ReferencePath Inlude="@(Reference->HasMetadata('HintPath')->'$(MSBuildProjectDirectory)\%(HintPath)')" />
-  </ItemGroup>-->
   
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472</TargetFrameworks>
     <Version>0.1</Version>
     <Authors>Artem Gorokhov, Ilya Nozhkin</Authors>
     <Product>Cofra.ReSharperPlugin</Product>

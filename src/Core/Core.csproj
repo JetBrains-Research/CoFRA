@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -18,6 +18,8 @@
     <Company>Cofra</Company>
     <Version>0.0.1</Version>
     <AssemblyName>Cofra.Core</AssemblyName>
+	<publishUrl>bin/publish</publishUrl>
+    <DeleteExistingFiles>True</DeleteExistingFiles>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -28,6 +30,17 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Optimize>false</Optimize>
   </PropertyGroup>
+  
+  <Target Name="CustomCollectFiles" AfterTargets="Publish">
+	<MsBuild Projects="Core.csproj" Targets="Build" Properties="Configuration=$(Configuration);TargetFramework=net472"/>
+	
+	<ItemGroup>
+	  <ExeFiles Include="bin/$(Configuration)/net472/Cofra.Core.exe" />
+	  <ExeFiles Include="bin/$(Configuration)/net472/Cofra.Core.exe.config" />
+	</ItemGroup>
+  
+    <Copy SourceFiles="@(ExeFiles)" DestinationFolder="$(publishUrl)" />
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
@@ -42,5 +55,8 @@
   <ItemGroup>
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
+  
+  <Target Name="BundleExe" AfterTargets="CopyAllFilesToSingleFolderForPackage"  BeforeTargets="MSDeployPublish">
+  </Target>
 
 </Project>

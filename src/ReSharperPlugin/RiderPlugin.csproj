@@ -1,18 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <TargetFrameworks>net472</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <!--<ItemGroup>
-    <ReferencePath Inlude="@(Reference->HasMetadata('HintPath')->'$(MSBuildProjectDirectory)\%(HintPath)')" />
-  </ItemGroup>-->
   
   <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Version>0.1</Version>
     <Authors>Artem Gorokhov, Ilya Nozhkin</Authors>
     <Product>Cofra.RiderPlugin</Product>

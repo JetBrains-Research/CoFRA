@@ -16,6 +16,8 @@ bld/
 *.nupkg
 *.zip
 
+*FolderProfile.pubxml
+
 packages/
 
 *TestResult.xml
