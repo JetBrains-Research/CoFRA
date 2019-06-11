@@ -16,23 +16,25 @@ namespace Cofra.AbstractIL.Internal.Indexing
         {
             get
             {
-                if (!myInitialized)
-                {
-                    myInvertedIndex = myInternalIndex.ToDictionary(pair => pair.Value, pair => pair.Key);
-                    myInitialized = true;
-                }
+                InitializeIfNeeded();
 
                 return myInvertedIndex;
             }
         }
 
-        public DenseBidirectionalIndex()
+        private void InitializeIfNeeded()
         {
-            var a = InvertedIndex;
+            if (!myInitialized)
+            {
+                myInvertedIndex = myInternalIndex.ToDictionary(pair => pair.Value, pair => pair.Key);
+                myInitialized = true;
+            }
         }
 
         public override int Add(TKey key)
         {
+            InitializeIfNeeded();
+            
             var id = base.Add(key);
             InvertedIndex.Add(id, key);
 
