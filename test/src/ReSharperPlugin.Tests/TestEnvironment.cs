@@ -1,7 +1,8 @@
-﻿using JetBrains.TestFramework;
+﻿using System.Threading;
+using JetBrains.TestFramework;
 using NUnit.Framework;
 
-[assembly: RequiresSTA]
+[assembly: RequiresThread(ApartmentState.STA)]
 namespace ReSharperPlugin.Tests
 {
     [SetUpFixture]

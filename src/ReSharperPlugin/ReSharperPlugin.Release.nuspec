@@ -11,7 +11,7 @@
     <copyright>Copyright 2019</copyright>
     <tags>InterproceduralAnalysis</tags>
     <dependencies>
-      <dependency id="Wave" version="[183.0,)" />
+      <dependency id="Wave" version="[192.0,)" />
     </dependencies>
   </metadata>
   <files>

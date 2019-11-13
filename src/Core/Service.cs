@@ -264,7 +264,12 @@ namespace Cofra.Core
                     var program = myProgramBuilder.GetProgram();
 
                     var starts = PerformTypePropagation(out var secondaryEntities);
-                    PerformTaintAnalysis(request, starts);
+                    switch (request.Analysis) 
+                    {
+                    case AnalysisType.TaintChecking:
+                        PerformTaintAnalysis(request, starts);
+                        break;
+                    }
 
                     Task.Run(() =>
                     {

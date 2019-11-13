@@ -11,7 +11,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Impl.Special;
 using JetBrains.ReSharper.Psi.Resolve;
+
 using JetBrains.Util;
+using IObjectCreationExpression = JetBrains.ReSharper.Psi.CSharp.Tree.IObjectCreationExpression;
 
 namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
 {
@@ -27,21 +29,21 @@ namespace Cofra.ReSharperPlugin.ILCompiler.ElementCompilers
         {
             IReference reference;
             var location = GetLocation(myObjectCreationExpression);
-            switch (myObjectCreationExpression.CreatedTypeUsage)
+            switch (myObjectCreationExpression.TypeUsage)
             {
-                case IUserDeclaredTypeUsage userDeclaredTypeUsage:
-                    reference = userDeclaredTypeUsage.TypeName.Reference;
+                case IUserTypeUsage userDeclaredTypeUsage:
+                    reference = userDeclaredTypeUsage.ScalarTypeName.Reference;
                     break;
-                case IPredefinedDeclaredTypeUsage predefinedDeclaredTypeUsage:
-                    reference = predefinedDeclaredTypeUsage.PredefinedTypeName.Reference;
+                case IPredefinedTypeUsage predefinedDeclaredTypeUsage:
+                    reference = predefinedDeclaredTypeUsage.ScalarPredefinedTypeName.Reference;
                     break;
-                case IDynamicDeclaredTypeUsage dynamicDeclaredTypeUsage:
+                case IDynamicTypeUsage dynamicDeclaredTypeUsage:
                     throw MyParams.CreateException("found dynamicDeclaredTypeUsage");
-                case ITupleDeclaredTypeUsage tupleDeclaredTypeUsage:
+                case ITupleTypeUsage tupleDeclaredTypeUsage:
                     throw MyParams.CreateException("found tupleDeclaredTypeUsage");
                     break;
                 default:
-                    throw MyParams.CreateException($"{myObjectCreationExpression.CreatedTypeUsage.GetType()} is unexpected type");
+                    throw MyParams.CreateException($"{myObjectCreationExpression.TypeUsage.GetType()} is unexpected type");
             }
 
             var declaredElement = reference.Resolve().DeclaredElement;

@@ -55,7 +55,7 @@ namespace Cofra.ReSharperPlugin.SolutionComponents
 
             ResultsAvailable = false;
 
-            lifetime.AddBracket(StartSession, Terminate);
+            lifetime.Bracket(StartSession, Terminate);
         }
 
         public CofraClient Client => myClient;

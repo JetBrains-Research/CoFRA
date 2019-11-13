@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4uuha50qe858lcd6/branch/master?svg=true)](https://ci.appveyor.com/project/ilya-nozhkin/cofra/branch/master)
-[![Build Status](https://travis-ci.org/gsvgit/CoFRA.svg?branch=master)](https://travis-ci.org/gsvgit/CoFRA)
+[![Build Status](https://travis-ci.org/JetBrains-Research/CoFRA.svg?branch=master)](https://travis-ci.org/JetBrains-Research/CoFRA)
 
 # Short description.
 

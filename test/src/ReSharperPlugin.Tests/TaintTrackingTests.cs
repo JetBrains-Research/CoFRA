@@ -3,6 +3,7 @@ using System.Linq;
 using Cofra.ReSharperPlugin.SolutionComponents;
 using Cofra.ReSharperPlugin.Stages;
 using JetBrains.Application.Settings;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.Impl;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -35,12 +36,12 @@ namespace ReSharperPlugin.Tests
             return true;
         }
 
-        protected override void DoTest()
+        protected override void DoTest(Lifetime lifetime)
         {
             var cofra = Solution.GetComponent<CofraFacade>();
             cofra.DropCaches();
 
-            base.DoTest();
+            base.DoTest(lifetime);
         }
 
         [TestCase("PassThroughLocals")]
